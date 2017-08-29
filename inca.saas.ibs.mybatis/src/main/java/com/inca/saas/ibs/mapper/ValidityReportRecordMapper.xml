@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.inca.saas.ibs.mapper.ValidityReportRecordMapper">
+	
+
+	<resultMap id="validityReportRecordInfoMap" type="com.inca.saas.ibs.entity.ValidityReportRecord">
+		<result property="id" column="id" />
+		<result property="validityReportId" column="rsa_validity_report_id" />
+	</resultMap>
+
+    <select id="findAll" resultMap="validityReportRecordInfoMap">
+        select * from gsp_validity_report_record
+    </select>
+    
+</mapper>

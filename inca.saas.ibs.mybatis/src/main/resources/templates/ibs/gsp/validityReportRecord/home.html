@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+<title>门店近效期催销记录</title>
+<meta charset="UTF-8"></meta>
+<script th:src="@{/lib/miniui/boot.js}"></script>
+<style type="text/css">
+.mini-pager-size .mini-combobox{
+	width:63px;
+}
+.mini-buttonedit-input{
+	line-height:20px;
+}
+
+</style>
+
+</head>
+<body>
+
+	<div>
+		<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;">
+			<table style="width: 100%;">
+				<tr>
+					<td style="white-space: nowrap;" align="center"><span>检索</span>
+						<input id="keyword" class="mini-textbox" emptyText="商品编码/生产厂商" style="width: 150px;" />&nbsp; 
+						<a class="mini-button" onclick="search()">查询</a></td>
+				</tr>
+			</table>
+		</div>
+		<div id="validityReportRecordGrid" class="mini-datagrid" style="height: 750px;" url="/IBSGSP347/miniuiSearch" idField="id" allowResize="true" pageSize="20"
+			 multiSelect="true" >
+			<div property="columns">
+				<div type="indexcolumn"></div>
+				<div field="goods_code" width="120" headerAlign="center" allowSort="true">商品编号</div> 
+                <div field="goods_name" width="100" headerAlign="center" allowSort="true">通用名</div> 
+                <div field="goods_opcode" width="120" headerAlign="center" allowSort="true">助记码</div> 
+                <div field="goods_spec" width="120" headerAlign="center" allowSort="true">规格</div> 
+                <div field="goods_unit" width="120" headerAlign="center" allowSort="true">基本单位</div> 
+			</div>
+		</div>
+		
+	</div> 
+	
+	
+
+
+	<script th:inline="javascript">
+	//<![CDATA[
+	mini.parse();
+	var grid = mini.get("validityReportRecordGrid");
+	grid.load();
+	//查询
+  	function search() {
+		
+// 		//关键字过滤
+//     	var keyword = mini.get("keyword").getValue();
+//     	var busiDateFrom = mini.get("busiDateFrom").getValue();
+//     	var busiDateTo = mini.get("busiDateTo").getValue();
+// 	   	 if(busiDateFrom!=""){
+// 	   		 busiDateFrom=busiDateFrom+"";
+// 	        }
+// 	   	 if(busiDateTo!=""){
+// 	   		 busiDateTo=busiDateTo+"";
+// 	        }
+    	 
+//       grid.load({ keyword: keyword,busiDateFrom:busiDateFrom,busiDateTo:busiDateTo});
+    }
+      //]]> 	
+    </script>
+
+
+
+</body>
+</html>

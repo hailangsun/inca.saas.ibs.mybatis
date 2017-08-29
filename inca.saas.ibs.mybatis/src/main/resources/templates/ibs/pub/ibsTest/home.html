@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+<title>IBS测试js</title>
+<meta charset="UTF-8"></meta>
+<script th:src="@{/lib/miniui/boot.js}"></script>
+<script th:src="@{/js/billStop.js}"></script> 
+<style type="text/css">
+.mini-pager-size .mini-combobox{
+	width:63px;
+}
+.mini-buttonedit-input{
+	line-height:20px;
+}
+
+</style>
+
+</head>
+<body>
+
+	<div>
+		<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;">
+			<table style="width: 100%;">
+				<tr>
+					<td style="white-space: nowrap;" align="center"><span>检索</span>
+						<input id="keyword" class="mini-textbox" emptyText="过滤条件" style="width: 150px;" />&nbsp; 
+						<a class="mini-button" onclick="search()">查询</a></td>
+				</tr>
+				<tr>
+					<td style="width: 100%;">
+					<a class="mini-button mini-ibs-btn" onclick="doStop()" plain="true" >终止</a>
+					</td> 
+				</tr>
+			</table>
+		</div>
+		<div id="ibsTestGrid" class="mini-datagrid" style="height: 750px;" url="/IBSTest/miniuiSearch" idField="id" allowResize="true" pageSize="20"
+			 multiSelect="true" >
+			<div property="columns">
+				<div type="indexcolumn"></div>
+				<div field="id" width="120" headerAlign="center" allowSort="true">id</div>
+				<div field="document_code" width="120" headerAlign="center" allowSort="true">单据编号</div>
+				<div field="supply_id" width="120" headerAlign="center" allowSort="true">供应商id</div> 
+                <div field="busi_date" width="100" headerAlign="center" allowSort="true">业务日期</div> 
+                <div field="stop_user_name" width="120" headerAlign="center" allowSort="true">终止人</div> 
+                <div field="stop_date" width="120" headerAlign="center" allowSort="true">终止时间</div> 
+                <div field="stop_reason" width="120" headerAlign="center" allowSort="true">终止原因</div> 
+			</div>
+		</div>
+		
+	</div> 
+	
+	
+
+
+	<script th:inline="javascript">
+	//<![CDATA[
+	mini.parse();
+	var grid = mini.get("ibsTestGrid");
+	grid.load({ids:"1,2,3,4"});
+	//查询
+  	function search() {
+		
+// 		//关键字过滤
+//     	var keyword = mini.get("keyword").getValue();
+//     	var busiDateFrom = mini.get("busiDateFrom").getValue();
+//     	var busiDateTo = mini.get("busiDateTo").getValue();
+// 	   	 if(busiDateFrom!=""){
+// 	   		 busiDateFrom=busiDateFrom+"";
+// 	        }
+// 	   	 if(busiDateTo!=""){
+// 	   		 busiDateTo=busiDateTo+"";
+// 	        }
+    	 
+//       grid.load({ keyword: keyword,busiDateFrom:busiDateFrom,busiDateTo:busiDateTo});
+    }
+	
+  //总单终止 
+  	function doStop(){//docDtl：总细单标志  doc 总单、  dtl 细单    id:总单ID
+	  debugger;
+  		var url 	 = /*[[@{/common/stopBills}]]*/;
+  		var funcPath = /*[[${funcPath}]]*/;
+  		stopDoc(url,funcPath,grid);
+  	}
+	
+	
+ 	//]]> 	
+    </script>
+</body>
+</html>

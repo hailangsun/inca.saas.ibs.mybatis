@@ -1,0 +1,10 @@
+/bin/
+/build/
+/.gradle/
+/.settings/
+/log/
+/.classpath
+/.springBeans
+/src/gen/
+/.project
+/activemq-data/

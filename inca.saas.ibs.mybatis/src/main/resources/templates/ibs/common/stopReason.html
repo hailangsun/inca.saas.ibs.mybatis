@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+
+<head>
+<title th:text="#{终止原因}"></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta charset="UTF-8" />
+<script th:src="@{/js/date.js}"></script>
+<style type="text/css">
+.dataTables_scrollHeadInner {
+	width: "100%";
+}
+.dataTables_scrollHeadInner table {
+	width: "100%";
+}
+.dataTables_scroll
+{
+    overflow:auto;
+}
+</style>
+
+<script th:inline="javascript">
+//<![CDATA[
+$(document).ready(function() {
+	
+});
+function confirmData(){
+	debugger;
+	var docDtlFlag = /*[[@{{docDtlFlag}(docDtlFlag=${docDtlFlag})}]]*/;  //总细单标志
+	var ids  = /*[[@{{ids}(ids=${ids})}]]*/;  //总单细单ID
+	var funPath= /*[[@{{funPath}(funPath=${funPath})}]]*/; //路径（功能ID号）
+    var reason = $("#reason").val();   //终止原因
+	var url;
+    console.log("当前功能的ID号："+funPath);
+	if(docDtlFlag=='doc'){//总单终止
+		url = "/" +funPath +"/stopDocuments";
+		url +="?ids=" + ids + "&reason=" + reason;
+	}
+	if(docDtl=='dtl'){//细单终止
+	    url = "/" +funPath +"/stopDetail";
+		url = url + "?id=" + docId + "&detailIds=" + detailIds + "&reason=" + reason;
+	}
+	console.log("传输的URL："+url);
+	console.log("当前数据所在的DataTable的ID为:"+datatable);
+	jQuery.ajax({
+        type: "POST",
+        url: url,
+        success: function(result) {
+        	var error = result.msgCode;
+        	if (error == 0) {
+        		bootbox.alert(result.msgContext);
+        	}else{
+        		var tools = TableTools.fnGetInstance(datatable);
+        		var index = tools.fnGetSelectedIndexes()[0];
+        		console.log("选择数据的行数:"+index);
+        		
+				var colStatus   = '';
+				var colStopUser = '';
+				var colStopDate = '';
+				var colStopReason = '';
+        		$("#"+datatable).DataTable().columns().every( function () {
+				    if (this.dataSrc() == 'status') {//状态
+				    	colStatus = this.index();
+				    }
+				    if(this.dataSrc() == 'statusView') {//状态  
+				    	colStatus = this.index();
+				    }
+				    if(this.dataSrc() == 'stopUserName'){//终止人
+				    	colStopUser = this.index(); 
+				    }
+				    if(this.dataSrc() == 'stopDate'){//终止时间
+				    	colStopDate = this.index();
+				    }
+				    if(this.dataSrc() == 'stopDateView'){//终止时间
+				    	colStopDate = this.index();
+				    }
+				    if(this.dataSrc() == 'stopReason'){//终止原因
+				    	colStopReason = this.index();
+				    }
+				} );
+        		console.log("终止人所在列数:"+colStopUser);
+        		console.log("终止时间所在列数:"+colStopDate);
+        		console.log("终止原因所在列数:"+colStopReason);
+        		console.log("状态所在列数:"+colStatus);
+        		console.log("状后台返回的终止人:"+result.userName);
+        		console.log("后台返回的终止时间:"+result.date);
+				$("#"+datatable).DataTable().cell(index, colStatus).data("终止");//状态
+				$("#"+datatable).DataTable().cell(index, colStopUser).data(result.userName);//终止人
+				$("#"+datatable).DataTable().cell(index, colStopDate).data(new Date(result.date).format("yyyy-MM-dd hh:mm:ss"));//终止时间
+				$("#"+datatable).DataTable().cell(index, colStopReason).data(reason);//终止原因
+				if(datatable=="masterdatatable"){
+					$("#detaildatatable").DataTable().ajax.reload();
+				}
+				
+        		console.log("以上数据：若列数为-1，DataTable的ID为null，请联系王开展");
+        		bootbox.alert(result.msgContext);
+        	}
+        }, error: function(error) {
+        	bootbox.alert(error);
+        }
+    });
+}
+
+//]]>
+</script>
+
+</head>
+
+<body>
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title" th:text="#{终止原因}"></h4>
+		</div>
+		<div class="modal-body">
+			<textarea rows="6" cols="75" id="reason"></textarea>
+ 		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary" id="cancel-btn" data-dismiss="modal" th:text="#{取消}"></button>
+			<button type="button" class="btn btn-primary" id="confirm-btn" data-dismiss="modal" onclick="confirmData()" th:text="#{确定}"></button>
+		</div>
+	</div>
+</div>
+
+
+</body>
+
+</html>
