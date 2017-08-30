@@ -43,7 +43,7 @@ public class UserController{
 	@RequestMapping({ "/" })
 	public String home() throws Exception {
 //		Page<User> selectPage = userService.selectPage(new Page<User>(1,5),null);
-		List<User> selectListBySQL = userService.selectListBySQL();
+		List<User> selectListBySQL = userService.selectUserAll();
 		System.out.println(selectListBySQL.size());
 		return "";
 	}

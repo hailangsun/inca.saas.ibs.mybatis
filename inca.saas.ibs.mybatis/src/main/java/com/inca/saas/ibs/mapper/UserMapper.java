@@ -20,4 +20,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select id,user_opcode userOpcode,user_name userName from pub_user")
     List<User> selectListBySQL();
     
+    List<User>selectUserAll();
+    
 }

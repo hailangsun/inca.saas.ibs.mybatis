@@ -25,5 +25,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 	public List<User> selectListBySQL() {
 		return baseMapper.selectListBySQL();
 	}
+
+	@Override
+	public List<User> selectUserAll() {
+		return baseMapper.selectUserAll();
+	}
+	
 	
 }
