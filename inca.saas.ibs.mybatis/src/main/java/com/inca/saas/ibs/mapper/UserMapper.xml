@@ -4,14 +4,10 @@
 
 	<!-- 通用查询结果列 -->
 	<sql id="Base_Column_List">
-		id, user_code userCode, user_opcode userOpcode
+		user_code userCode, user_opcode userOpcode
 	</sql>
 
 	<delete id="deleteAll">
 		DELETE FROM USER
 	</delete>
-	
-	<select id="selectUserList" resultType="User">
-    	SELECT * FROM pub_user
-	</select>
 </mapper>

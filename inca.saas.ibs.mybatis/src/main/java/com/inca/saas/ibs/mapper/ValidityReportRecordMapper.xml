@@ -8,7 +8,7 @@
 		<result property="validityReportId" column="rsa_validity_report_id" />
 	</resultMap>
 
-    <select id="findAll" resultMap="validityReportRecordInfoMap">
+    <select id="findAll"  resultMap="validityReportRecordInfoMap">
         select * from gsp_validity_report_record
     </select>
     

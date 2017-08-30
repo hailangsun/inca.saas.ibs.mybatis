@@ -1,5 +1,4 @@
 package com.inca.saas.ibs.entity;
-import java.io.Serializable;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -7,19 +6,18 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.inca.saas.ibs.support.SuperEntity;
 
 
-@TableName("pub_user")
-public class User extends SuperEntity<User> {
+@TableName(value ="pub_user")
+public class User extends SuperEntity<User>{
 
 	/**
 	 * 
 	 */
+	@TableField(exist = false)
 	private static final long serialVersionUID = -1021203475848952666L;
 
 	public User() {
 		super();
 	}
-
-	private Long id;
 	
 	@TableField("user_code")
 	private String userCode;
@@ -45,15 +43,15 @@ public class User extends SuperEntity<User> {
 	@TableField("birth_date")
 	private Date birthDate;
 
-	//性别
-	private Integer sex;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
+	public User(Long id, String userCode, String userOpcode, String userName, Integer dept, String idCard,
+			Date birthDate) {
+		super();
+		this.userCode = userCode;
+		this.userOpcode = userOpcode;
+		this.userName = userName;
+		this.dept = dept;
+		this.idCard = idCard;
+		this.birthDate = birthDate;
 	}
 
 	public String getUserCode() {
@@ -104,24 +102,12 @@ public class User extends SuperEntity<User> {
 		this.birthDate = birthDate;
 	}
 
-	public Integer getSex() {
-		return sex;
-	}
-
-	public void setSex(Integer sex) {
-		this.sex = sex;
-	}
-
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", userCode=" + userCode + ", userOpcode=" + userOpcode + ", userName=" + userName
-				+ ", dept=" + dept + ", idCard=" + idCard + ", birthDate=" + birthDate + ", sex=" + sex + "]";
+		return "User [userCode=" + userCode + ", userOpcode=" + userOpcode + ", userName=" + userName + ", dept=" + dept
+				+ ", idCard=" + idCard + ", birthDate=" + birthDate + "]";
 	}
 
-
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
+	
 
 }

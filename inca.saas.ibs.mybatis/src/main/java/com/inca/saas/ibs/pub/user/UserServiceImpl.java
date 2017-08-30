@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.baomidou.mybatisplus.plugins.Page;
-import com.baomidou.mybatisplus.plugins.pagination.Pagination;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.inca.saas.ibs.entity.User;
 import com.inca.saas.ibs.mapper.UserMapper;
@@ -28,8 +26,4 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 		return baseMapper.selectListBySQL();
 	}
 	
-	public Page<User> selectUserPage(Page<User> page) {
-	    page.setRecords(baseMapper.selectUserList(page));
-	    return page;
-	}
 }
