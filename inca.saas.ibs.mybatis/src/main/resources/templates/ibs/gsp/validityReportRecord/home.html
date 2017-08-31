@@ -27,7 +27,7 @@
 				</tr>
 			</table>
 		</div>
-		<div id="validityReportRecordGrid" class="mini-datagrid" style="height: 750px;" url="/IBSGSP347/miniuiSearch" idField="id" allowResize="true" pageSize="20"
+		<!-- <div id="validityReportRecordGrid" class="mini-datagrid" style="height: 750px;" url="/IBSGSP347/miniuiSearch" idField="id" allowResize="true" pageSize="20"
 			 multiSelect="true" >
 			<div property="columns">
 				<div type="indexcolumn"></div>
@@ -37,7 +37,10 @@
                 <div field="goods_spec" width="120" headerAlign="center" allowSort="true">规格</div> 
                 <div field="goods_unit" width="120" headerAlign="center" allowSort="true">基本单位</div> 
 			</div>
-		</div>
+		</div> -->
+		
+	<div id="validityReportRecordGrid" class="mini-datagrid" style="height:750px;" url="/IBSGSP347/miniuiSearch" allowCellEdit="true" allowCellSelect="true">
+	</div>
 		
 	</div> 
 	
@@ -48,7 +51,15 @@
 	//<![CDATA[
 	mini.parse();
 	var grid = mini.get("validityReportRecordGrid");
+	var columns = /*[[${columns}]]*/;
+	grid.set(columns);
 	grid.load();
+	
+	function toNext(e){
+		debugger;
+		console.info(e);
+	}
+	
 	//查询
   	function search() {
 		

@@ -13,6 +13,6 @@
 	
 	
 	<select id="selectUserAll" resultType="User">
-		SELECT id, user_code userCode, user_opcode userOpcode from pub_user
+		SELECT id, user_code userCode, user_opcode userOpcode from pub_user 
 	</select>
 </mapper>

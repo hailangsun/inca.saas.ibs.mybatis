@@ -42,10 +42,11 @@ public class User extends SuperEntity<User>{
 	//出生日期
 	@TableField("birth_date")
 	private Date birthDate;
-
+	
 	public User(Long id, String userCode, String userOpcode, String userName, Integer dept, String idCard,
 			Date birthDate) {
 		super();
+		this.setId(id);
 		this.userCode = userCode;
 		this.userOpcode = userOpcode;
 		this.userName = userName;

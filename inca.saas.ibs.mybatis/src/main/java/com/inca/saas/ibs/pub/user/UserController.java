@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.inca.saas.ibs.entity.User;
 import com.inca.saas.ibs.mapper.UserMapper;
@@ -42,9 +43,12 @@ public class UserController{
 	
 	@RequestMapping({ "/" })
 	public String home() throws Exception {
-//		Page<User> selectPage = userService.selectPage(new Page<User>(1,5),null);
-		List<User> selectListBySQL = userService.selectUserAll();
-		System.out.println(selectListBySQL.size());
+		Page<User> selectPage = userService.selectPage(new Page<User>(1,5),null);
+		Page<User> userListPage = userService.selectPage(new Page<User>(1,5), new EntityWrapper<>(new User()));
+		System.err.println("total="+userListPage.getTotal()+", current list size="+userListPage.getRecords().size());
+//		List<User> selectListBySQL = userService.selectUserAll();
+//		System.out.println(selectPage.getSize());
+		EntityWrapper<User> ew = new EntityWrapper<>();
 		return "";
 	}
 	

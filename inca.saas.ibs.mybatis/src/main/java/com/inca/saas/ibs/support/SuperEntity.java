@@ -14,6 +14,14 @@ public class SuperEntity<T extends Model> extends Model<T> {
 	@TableId
 	private Long id;
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
     protected Serializable pkVal() {
         return this.id;

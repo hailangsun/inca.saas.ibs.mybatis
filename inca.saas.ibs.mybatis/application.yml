@@ -18,10 +18,10 @@ spring:
     platform: postgresql
     initialize: true
     continue-on-error: true
-  h2:
-    console:
-      enabled: true
-      path: /console
+#  h2:
+#    console:
+#      enabled: true
+#      path: /console
 
 #mybatis
 mybatis-plus:
