@@ -15,6 +15,8 @@ public class ValidityReportRecordQuery implements Serializable {
 	private String busiDateFrom;
 	private String busiDateTo;
 
+	private String columnsJson;
+	
 	public java.lang.String getKeyword() {
 		return keyword;
 	}
@@ -70,5 +72,15 @@ public class ValidityReportRecordQuery implements Serializable {
 	public void setBusiDateTo(String busiDateTo) {
 		this.busiDateTo = busiDateTo;
 	}
+
+	public String getColumnsJson() {
+		return columnsJson;
+	}
+
+	public void setColumnsJson(String columnsJson) {
+		this.columnsJson = columnsJson;
+	}
+	
+	
 
 }

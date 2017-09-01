@@ -38,7 +38,15 @@
                 <div field="goods_unit" width="120" headerAlign="center" allowSort="true">基本单位</div> 
 			</div>
 		</div> -->
-		
+	<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;padding-top:10px;padding-bottom:5px;">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 100%;">
+					<a class="mini-button mini-ibs-btn"  onclick="doDtlExport()" id="exportDtlExcel" plain="true">导出</a> 
+					</td>
+				</tr>
+			</table>
+	</div>
 	<div id="validityReportRecordGrid" class="mini-datagrid" style="height:750px;" url="/IBSGSP347/miniuiSearch" allowCellEdit="true" allowCellSelect="true">
 	</div>
 		
@@ -76,6 +84,44 @@
     	 
 //       grid.load({ keyword: keyword,busiDateFrom:busiDateFrom,busiDateTo:busiDateTo});
     }
+	
+	function doDtlExport(){
+		doExport(grid);
+	}
+	
+	function doExport(grid){
+		var uri='/IBSGSP347/export';
+		$("#columnsJson").val(mini.encode(getExpColumns(grid)));
+		$("#export_form").attr("action",uri).submit();
+	}
+	$(document).ready(function(){
+		var exp_f=$('<form id="export_form" name ="export_iframe" target="_bland" method="POST"> <input id="columnsJson" type="hidden" name="columnsJson"  type="text" /></form>');
+		$("body").append(exp_f);
+	});
+	
+	
+	function getExpColumns(exportGrid){
+		//获取表列
+	    var columns = exportGrid.columns;
+	    function getColumns(columns) {
+	        var cols = [];
+	        for (var i = 0; i < columns.length; i++) {
+	            var column = columns[i];
+	            var col = { header: column.header, field: column.field, type: column.type };
+	            if (column.columns) {
+	                col.columns = getColumns(column.columns);
+	            }
+	            cols.push(col);
+	        }
+	        return cols;
+	    }
+	    var columns = getColumns(columns);
+	    //添加细单导出总单单据编号
+// 	    var documentCodeTemp = { header: "单据编号", field: "document_code"};
+// 	    columns.push(documentCodeTemp);
+	    return columns;
+	}
+	
       //]]> 	
     </script>
 

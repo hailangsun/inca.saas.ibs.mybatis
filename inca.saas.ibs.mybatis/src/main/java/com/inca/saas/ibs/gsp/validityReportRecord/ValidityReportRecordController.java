@@ -1,11 +1,14 @@
 package com.inca.saas.ibs.gsp.validityReportRecord;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,17 +20,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.inca.saas.ibs.common.BaseController;
+import com.inca.saas.ibs.common.ColumnConvert;
+import com.inca.saas.ibs.common.CommonService;
 import com.inca.saas.ibs.mapper.ValidityReportRecordMapper;
 import com.inca.saas.ibs.support.BaseDao;
 import com.inca.saas.ibs.support.Query;
 import com.inca.saas.ibs.support.QueryResult;
 import com.inca.saas.ibs.tablesetup.Column;
 import com.inca.saas.ibs.tablesetup.Column.Editor;
+import com.inca.saas.ibs.util.export.CsvUtil;
 
 @Controller
 @RequestMapping(ValidityReportRecordController.FUNC_PATH)
 @SessionAttributes({ ValidityReportRecordController.SESSION_ATTR_QUERY })
-public class ValidityReportRecordController{
+public class ValidityReportRecordController extends BaseController{
 	final Log log = LogFactory.getLog(getClass());
 
 	public static final String FUNC_PATH = "/IBSGSP347";
@@ -43,6 +50,9 @@ public class ValidityReportRecordController{
 	@Autowired
 	ValidityReportRecordMapper validityReportRecordMapper;
 	
+	protected CommonService getCommonService() {
+		return serviceManager.lookup(CommonService.SERVICE_NAME, CommonService.class);
+	}
 	
 	@RequestMapping({ "/" })
 	public String home(Model model) throws Exception {
@@ -75,11 +85,19 @@ public class ValidityReportRecordController{
 		column1.setType("indexcolumn");
 		column1.setHeader("#");
 		columns.add(column1);
+		
+		
 		Column column2 = new Column();
 		column2.field("goods_code");
 		column2.setWidth(120);
 		column2.setHeader("商品编号");
+		Editor editor2 = new Editor();
+		editor2.setType("autocomplete");
+		
+		column2.setEditor(editor2);
 		columns.add(column2);
+		
+		
 		
 		Column column3 = new Column();
 		column3.field("goods_name");
@@ -107,6 +125,33 @@ public class ValidityReportRecordController{
 		columns.add(column6);
 		map.put("columns", columns);
 		return map;
+	}
+	
+	@RequestMapping("/export")
+	public void exportDtl(HttpServletResponse response,HttpServletRequest request, HttpSession session,ValidityReportRecordQuery query) throws Exception{
+		File csv = null;
+		try {
+			
+			Map<String,Object> maps = new HashMap<>();
+			maps.put("columnsJson", query.getColumnsJson());
+			maps.put("prefix", "测试导出");
+			String sql ="select * from pub_goods ";
+			maps.put("sql", sql);
+//			Map<String,ColumnConvert> convertMap = new HashMap();
+			Object[] ags = null;
+			csv = getCommonService().getExportExcel(maps, ags);
+			log.info(" 导出文件大小："+csv.length());
+			if(csv.length()>1024*1024*10){
+				CsvUtil.buildFastCsvFile(response, csv);
+			}else{
+				CsvUtil.buildCsvFile(response, csv);
+			}
+		} finally{
+			if(csv!=null&&csv.exists()){
+				log.info("删除临时文件："+csv.delete());
+			}
+		}
+		
 	}
 	
 }

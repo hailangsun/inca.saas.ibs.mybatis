@@ -138,6 +138,30 @@ public class Column implements Serializable {
 		private Integer maxValue;
 		private String value;
 		private String url;
+		private Buttons buttons;
+		private Column column;
+		private Boolean enterQuery = false;
+		
+		public Boolean getEnterQuery() {
+			return enterQuery;
+		}
+		public void setEnterQuery(Boolean enterQuery) {
+			this.enterQuery = enterQuery;
+		}
+		public Column getColumn() {
+			return column;
+		}
+		public void setColumn(Column column) {
+			this.column = column;
+		}
+		public Buttons getButtons() {
+			return buttons;
+		}
+		public Editor setButtons(Buttons buttons) {
+			this.buttons = buttons;
+			return this;
+		}
+		
 		public String getType() {
 			return type;
 		}
@@ -181,7 +205,28 @@ public class Column implements Serializable {
 		}
 		
 		
+	}
+	
+	public static class Buttons implements Serializable {
+		private String iconCls = "icon-search";
+		private String handler;
+		public Buttons handler(String handler) {
+			return setHandler(handler);
+		}
 		
+		public String getIconCls() {
+			return iconCls;
+		}
+		public void setIconCls(String iconCls) {
+			this.iconCls = iconCls;
+		}
+		public String getHandler() {
+			return handler;
+		}
+		public Buttons setHandler(String handler) {
+			this.handler = handler;
+			return this;
+		}
 	}
 
 }
