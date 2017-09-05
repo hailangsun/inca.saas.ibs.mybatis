@@ -4,9 +4,12 @@ server:
 
 #spring
 spring:
-  devtools:
-    restart:
-      enabled: false
+#  devtools:
+#    restart:
+#      enabled: fasle
+  #thymeleaf
+  thymeleaf:
+    cache: false
 
   # H2 DATABASE CONFIG
   datasource:
@@ -18,6 +21,7 @@ spring:
     platform: postgresql
     initialize: true
     continue-on-error: true
+   
 #  h2:
 #    console:
 #      enabled: true

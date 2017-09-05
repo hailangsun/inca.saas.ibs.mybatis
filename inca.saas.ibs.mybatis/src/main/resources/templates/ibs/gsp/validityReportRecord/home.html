@@ -38,17 +38,18 @@
                 <div field="goods_unit" width="120" headerAlign="center" allowSort="true">基本单位</div> 
 			</div>
 		</div> -->
-	<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;padding-top:10px;padding-bottom:5px;">
-			<table style="width: 100%;">
-				<tr>
-					<td style="width: 100%;">
-					<a class="mini-button mini-ibs-btn"  onclick="doDtlExport()" id="exportDtlExcel" plain="true">导出</a> 
-					</td>
-				</tr>
-			</table>
-	</div>
-	<div id="validityReportRecordGrid" class="mini-datagrid" style="height:750px;" url="/IBSGSP347/miniuiSearch" allowCellEdit="true" allowCellSelect="true">
-	</div>
+		<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;padding-top:10px;padding-bottom:5px;">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 100%;">
+						<a class="mini-button mini-ibs-btn"  onclick="doDtlExport()" id="exportDtlExcel" plain="true">导出</a>
+						<a class="mini-button mini-ibs-btn"  onclick="doInportExcel()" id="inportExcel" plain="true">导入</a>  
+						</td>
+					</tr>
+				</table>
+		</div>
+		<div id="validityReportRecordGrid" class="mini-datagrid" style="height:750px;" url="/IBSGSP347/miniuiSearch" allowCellEdit="true" allowCellSelect="true">
+		</div>
 		
 	</div> 
 	
@@ -60,11 +61,13 @@
 	mini.parse();
 	var grid = mini.get("validityReportRecordGrid");
 	var columns = /*[[${columns}]]*/;
-	grid.set(columns);
+	var columnsTemp = mini.decode(columns);
+	columnsTemp.columns[1].editor.buttons[0].handler = onGoods;
+	grid.set(columnsTemp);
 	grid.load();
 	
+	
 	function toNext(e){
-		debugger;
 		console.info(e);
 	}
 	
@@ -121,6 +124,78 @@
 // 	    columns.push(documentCodeTemp);
 	    return columns;
 	}
+	
+	
+	function doInportExcel(){
+		 var url = "/IBSGSP347/dialog";
+	     mini.open({
+	            url: url,
+	            title: "导入",
+	            width: 800,
+	            height: 300,
+	            onload: function () {       //弹出页面加载完成
+	                 var iframe = this.getIFrameEl(); 
+	                 var data = {action:"ok"};       
+	                 //调用弹出页面方法进行初始化
+	                 iframe.contentWindow.SetData(data); 
+	             }
+	        });
+		
+		//window.location.href = '/IBSGSP347/dialog';
+	}
+	
+	//商品
+	function onValueChanged(e) {
+		debugger;
+		 var data = e.selected;
+		 var row = grid.getSelected();
+	     if (data) {
+	         
+	     }
+	}
+	
+	function onBeforeLoad(e){
+	  	var key = e.data.key;
+	
+	}
+	
+	function keyup(e) {
+		var kc = e.htmlEvent.keyCode;
+	
+	} 
+	
+	 function onGoods(e) {
+		 debugger;
+			var row = grid.getSelected();
+	         mini.open({
+	             url: "/IBSPUB010Hov/miniuihome/miniuiHovSearch",
+	             title: "商品管理列表",
+	             width: 1050,
+	             height: 600,
+	             onload: function () {       //弹出页面加载完成
+	                 var iframe = this.getIFrameEl(); 
+	                 var data = {action:"ok"};       
+	                 //调用弹出页面方法进行初始化
+	                 iframe.contentWindow.SetData(data); 
+	                                 
+	             },
+	             ondestroy: function (action) {
+	            	 
+	                 if (action == "ok") {
+	                     var iframe = this.getIFrameEl();
+	                     var data = iframe.contentWindow.GetData();
+	                     data = mini.clone(data);    //必须
+	                     if (data) {
+	                         dtl_grid.updateRow( row, {goods_code:data.goods_code,goods_id:data.id,goods_name:data.goods_name,goods_spec:data.goods_spec,goods_unit:data.goods_unit,medicine_type:data.medicine_type,factory_name:data.factory_name,prod_area:data.prod_area,approval_no:data.approval_no,tax_rate:data.tax_rate,lot_type:data.lot_type});
+	                    	 dtl_grid.cancelEdit();
+	                       
+	                     }
+	                 }
+
+	             }
+	         });
+	     }
+     
 	
       //]]> 	
     </script>

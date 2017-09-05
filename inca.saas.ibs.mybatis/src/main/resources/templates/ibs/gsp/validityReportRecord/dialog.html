@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+<title>导入</title>
+<meta charset="UTF-8"></meta>
+<script th:src="@{/lib/jquery-2.1.4/jquery.min.js}"></script>
+<script th:src="@{/lib/miniui/boot.js}" type="text/javascript"></script>
+<script th:src="@{/lib/miniui/ajaxfileupload.js}" type="text/javascript"></script>
+<style type="text/css">
+
+.mini-pager-size .mini-combobox{
+	width:63px;
+}
+.mini-buttonedit-input{
+	line-height:20px;
+}
+
+</style>
+
+</head>
+<body>
+
+	<div>
+    	<div>
+	        <input class="mini-htmlfile" name="Fdata"  id="file1" style="width:300px;"/>
+	        <br/><br/>
+	        <input type="button" value="上传" onclick="ajaxFileUpload()"/>
+    	</div>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[
+	           
+ 	mini.parse();
+    var grid = mini.get("suPriceLstGrid");
+   
+
+    
+    //判断字段是否为空
+    function isNull(a){
+	   	 if(a == null || a== undefined || a == ''){
+	   		return true; 
+	   	 }
+	   	return false;
+    }
+    
+ function ajaxFileUpload() {
+	 
+        debugger;
+        var inputFile = $("#file1 > input:file")[0];
+
+        $.ajaxFileUpload({
+            url: "inputFile",                 //用于文件上传的服务器端请求地址
+            fileElementId: inputFile,               //文件上传域的ID
+            //data: { a: 1, b: true },            //附加的额外参数
+            dataType: 'text',                   //返回值类型 一般设置为json
+            success: function (data, status)    //服务器成功响应处理函数
+            {
+                alert("上传成功: " + data);
+
+            },
+            error: function (data, status, e)   //服务器响应失败处理函数
+            {
+                alert(e);
+            },
+            complete: function () {
+                var jq = $("#file1 > input:file");
+                jq.before(inputFile);
+                jq.remove();
+            }
+        });
+    }
+ 
+    
+      //]]> 	
+    </script>
+
+
+
+</body>
+</html>

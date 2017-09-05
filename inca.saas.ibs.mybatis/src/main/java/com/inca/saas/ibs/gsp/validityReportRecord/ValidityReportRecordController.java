@@ -21,52 +21,54 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.inca.saas.ibs.common.BaseController;
-import com.inca.saas.ibs.common.ColumnConvert;
 import com.inca.saas.ibs.common.CommonService;
 import com.inca.saas.ibs.mapper.ValidityReportRecordMapper;
 import com.inca.saas.ibs.support.BaseDao;
 import com.inca.saas.ibs.support.Query;
 import com.inca.saas.ibs.support.QueryResult;
 import com.inca.saas.ibs.tablesetup.Column;
+import com.inca.saas.ibs.tablesetup.Column.Buttons;
+import com.inca.saas.ibs.tablesetup.Column.Columns;
 import com.inca.saas.ibs.tablesetup.Column.Editor;
 import com.inca.saas.ibs.util.export.CsvUtil;
 
 @Controller
 @RequestMapping(ValidityReportRecordController.FUNC_PATH)
 @SessionAttributes({ ValidityReportRecordController.SESSION_ATTR_QUERY })
-public class ValidityReportRecordController extends BaseController{
+public class ValidityReportRecordController extends BaseController {
 	final Log log = LogFactory.getLog(getClass());
 
 	public static final String FUNC_PATH = "/IBSGSP347";
 
 	public static final String SESSION_ATTR_QUERY = "rsa_validityReport_Record_query";
-	
+
 	@ModelAttribute("funcPath")
 	String funcPath() {
 		return FUNC_PATH;
 	}
+
 	@Autowired
 	BaseDao baseDao;
 	@Autowired
 	ValidityReportRecordMapper validityReportRecordMapper;
-	
+
 	protected CommonService getCommonService() {
 		return serviceManager.lookup(CommonService.SERVICE_NAME, CommonService.class);
 	}
-	
+
 	@RequestMapping({ "/" })
 	public String home(Model model) throws Exception {
 		model.addAttribute("columns", getColumns());
 		return "ibs/gsp/validityReportRecord/home";
 	}
-	
+
 	@RequestMapping(value = "/miniuiSearch")
 	@ResponseBody
 	public QueryResult miniSearch(Query query, HttpServletResponse response) {
 		QueryResult search;
 		try {
-			String sql ="select * from pub_goods ";
-			search = baseDao.search(sql,query);
+			String sql = "select * from pub_goods ";
+			search = baseDao.search(sql, query);
 			return search;
 		} catch (Exception e) {
 			log.error("search error", e);
@@ -74,84 +76,67 @@ public class ValidityReportRecordController extends BaseController{
 			return new QueryResult<>("search error");
 		}
 	}
-	
-	
-	public Map<String,Object> getColumns(){
-		Map<String,Object> map = new HashMap<>();
+
+	public Map<String, Object> getColumns() {
+		Map<String, Object> map = new HashMap<>();
 		List<Column> columns = new ArrayList<>();
-		Column column1 = new Column();
-		Editor editor = new Editor();
-		editor.setType("textbox");
-		column1.setType("indexcolumn");
-		column1.setHeader("#");
-		columns.add(column1);
-		
-		
-		Column column2 = new Column();
-		column2.field("goods_code");
-		column2.setWidth(120);
-		column2.setHeader("商品编号");
-		Editor editor2 = new Editor();
-		editor2.setType("autocomplete");
-		
-		column2.setEditor(editor2);
-		columns.add(column2);
-		
-		
-		
-		Column column3 = new Column();
-		column3.field("goods_name");
-		column3.setWidth(120);
-		column3.setHeader("通用名");
-		column3.setEditor(editor);
-		columns.add(column3);
-		
-		Column column4 = new Column();
-		column4.field("goods_opcode");
-		column4.setWidth(120);
-		column4.setHeader("助记码");
-		columns.add(column4);
-		
-		Column column5 = new Column();
-		column5.field("goods_spec");
-		column5.setWidth(120);
-		column5.setHeader("规格");
-		columns.add(column5);
-		
-		Column column6 = new Column();
-		column6.field("goods_unit");
-		column6.setWidth(120);
-		column6.setHeader("基本单位");
-		columns.add(column6);
+		columns.add(new Column().type("indexcolumn").header("#"));
+		columns.add(new Column().editor(
+				new Editor().type("autocomplete").cls("mini-autocomplete").name("goods_code").enterQuery(true).style("width: 250px").onvaluechanged("onValueChanged").onkeyup("keyup")
+				.addButtons(new Buttons().handler("onGoods")).popupWidth("800").url("/IBSPUB010Hov/miniuiHovSearch")
+				.textField("goods_code").valueField("goods_code").onbeforeload("onBeforeLoad")
+				.addColumns(new Columns().field("goods_code").header("商品编码"))
+				.addColumns(new Columns().field("goods_name").header("通用名"))
+				.addColumns(new Columns().field("goods_unit").header("基本单位"))
+				.addColumns(new Columns().field("medicine_type").header("剂型"))
+				.addColumns(new Columns().field("factory_name").header("生产厂商"))
+				)
+				.field("goods_code").width(120).header("商品编号").headerAlign("center").headerStyle("color:#0175be").name("goods_code").displayField("goods_code"));
+		columns.add(new Column().field("goods_name").width(120).header("通用名"));
+		columns.add(new Column().field("goods_opcode").width(120).header("助记码"));
+		columns.add(new Column().field("goods_spec").width(120).header("规格"));
+		columns.add(new Column().field("goods_unit").width(120).header("基本单位"));
 		map.put("columns", columns);
 		return map;
 	}
-	
+
 	@RequestMapping("/export")
-	public void exportDtl(HttpServletResponse response,HttpServletRequest request, HttpSession session,ValidityReportRecordQuery query) throws Exception{
+	public void exportDtl(HttpServletResponse response, HttpServletRequest request, HttpSession session,
+			ValidityReportRecordQuery query) throws Exception {
 		File csv = null;
 		try {
-			
-			Map<String,Object> maps = new HashMap<>();
+
+			Map<String, Object> maps = new HashMap<>();
 			maps.put("columnsJson", query.getColumnsJson());
 			maps.put("prefix", "测试导出");
-			String sql ="select * from pub_goods ";
+			String sql = "select * from pub_goods ";
 			maps.put("sql", sql);
-//			Map<String,ColumnConvert> convertMap = new HashMap();
+			// Map<String,ColumnConvert> convertMap = new HashMap();
 			Object[] ags = null;
 			csv = getCommonService().getExportExcel(maps, ags);
-			log.info(" 导出文件大小："+csv.length());
-			if(csv.length()>1024*1024*10){
+			log.info(" 导出文件大小：" + csv.length());
+			if (csv.length() > 1024 * 1024 * 10) {
 				CsvUtil.buildFastCsvFile(response, csv);
-			}else{
+			} else {
 				CsvUtil.buildCsvFile(response, csv);
 			}
-		} finally{
-			if(csv!=null&&csv.exists()){
-				log.info("删除临时文件："+csv.delete());
+		} finally {
+			if (csv != null && csv.exists()) {
+				log.info("删除临时文件：" + csv.delete());
 			}
 		}
-		
+
 	}
-	
+
+	@RequestMapping({ "/dialog" })
+	public String importExcel() {
+		return "ibs/gsp/validityReportRecord/dialog";
+	}
+
+	@RequestMapping({ "/inputFile" })
+	@ResponseBody
+	public String update(String inputFile){
+		System.out.println(inputFile);
+		return "1";
+	}
 }
