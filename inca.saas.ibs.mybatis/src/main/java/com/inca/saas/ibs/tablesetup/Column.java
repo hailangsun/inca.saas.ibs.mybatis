@@ -15,7 +15,7 @@ public class Column implements Serializable {
 	private String dateFormat;
 	private Boolean allowSort = true;
 	private String header;
-	private Integer width;
+	private Integer width = 120;
 	private String headerAlign = "center";
 	private Boolean autoShowPopup;
 	private Integer trueValue;
@@ -25,6 +25,20 @@ public class Column implements Serializable {
 	private String headerStyle;
 	private String displayField;
 	private String name;
+	private Boolean isAdvQuery = false;
+	
+	
+	
+	public Boolean getIsAdvQuery() {
+		return isAdvQuery;
+	}
+	public Column setIsAdvQuery(Boolean isAdvQuery) {
+		this.isAdvQuery = isAdvQuery;
+		return this;
+	}
+	public Column isAdvQuery(Boolean isAdvQuery) {
+		return setIsAdvQuery(isAdvQuery);
+	}
 	
 	public String getField() {
 		return field;

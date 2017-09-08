@@ -1,61 +1,15 @@
 package com.inca.saas.ibs.gsp.validityReportRecord;
 
-import java.io.Serializable;
+import com.inca.saas.ibs.support.Query;
 
-public class ValidityReportRecordQuery implements Serializable {
+public class ValidityReportRecordQuery extends Query {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private java.lang.String keyword;
-	private Integer pageIndex;
-	private Integer pageSize;
-	private String sortField;
-	private String sortOrder;
 	private String busiDateFrom;
 	private String busiDateTo;
-
 	private String columnsJson;
-	
-	public java.lang.String getKeyword() {
-		return keyword;
-	}
-
-	public void setKeyword(java.lang.String keyword) {
-		this.keyword = keyword;
-	}
-
-	public Integer getPageIndex() {
-		return pageIndex;
-	}
-
-	public void setPageIndex(Integer pageIndex) {
-		this.pageIndex = pageIndex;
-	}
-
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
-
-	public String getSortField() {
-		return sortField;
-	}
-
-	public void setSortField(String sortField) {
-		this.sortField = sortField;
-	}
-
-	public String getSortOrder() {
-		return sortOrder;
-	}
-
-	public void setSortOrder(String sortOrder) {
-		this.sortOrder = sortOrder;
-	}
 
 	public String getBusiDateFrom() {
 		return busiDateFrom;

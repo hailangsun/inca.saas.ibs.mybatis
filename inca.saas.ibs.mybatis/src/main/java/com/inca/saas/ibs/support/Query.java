@@ -1,6 +1,8 @@
 package com.inca.saas.ibs.support;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,10 @@ public class Query implements Serializable {
 	private String keyword;
 
 	String loggerPrefix = null;
+	
+	private Boolean isAdvQuery = false;
+	
+	private Map<String,String> prop = new HashMap();
 
 	public int getPageIndex() {
 		return pageIndex;
@@ -87,4 +93,21 @@ public class Query implements Serializable {
 	public String getDefaultSort() {
 		return "";
 	}
+
+	public Map<String, String> getProp() {
+		return prop;
+	}
+
+	public void setProp(Map<String, String> prop) {
+		this.prop = prop;
+	}
+
+	public Boolean getIsAdvQuery() {
+		return isAdvQuery;
+	}
+
+	public void setIsAdvQuery(Boolean isAdvQuery) {
+		this.isAdvQuery = isAdvQuery;
+	}
+	
 }

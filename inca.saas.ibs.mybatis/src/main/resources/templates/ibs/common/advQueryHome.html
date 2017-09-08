@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+<title>高级查询</title>
+<meta charset="UTF-8"></meta>
+<script th:src="@{/lib/miniui/boot.js}"></script>
+<style type="text/css">
+.mini-pager-size .mini-combobox{
+	width:63px;
+}
+.mini-buttonedit-input{
+	line-height:20px;
+}
+
+</style>
+
+</head>
+<body>
+
+	<div>
+		<div id="advGrid" editNextOnEnterKey="true" class="mini-datagrid" style="height:300px;" url="/IBSGSP347/miniuiSearch" allowCellEdit="true" allowCellSelect="true" showPager="false">
+		</div>
+		
+		 <div class="mini-toolbar" style="text-align:center;padding-top:8px;padding-bottom:8px;" borderStyle="border:0;">
+	        <a class="mini-button" style="width:60px;" onclick="onOk()">确定</a>
+	        <span style="display:inline-block;width:25px;"></span>
+	        <a class="mini-button" style="width:60px;" onclick="onCancel()">取消</a>
+    	</div>
+	</div> 
+
+	<script th:inline="javascript">
+	//<![CDATA[
+	
+	var url;          
+	mini.parse();
+    var grid = mini.get("advGrid");
+    function SetData(data) {
+        if (data.action == "ok") {
+            //跨页面传递的数据对象，克隆后才可以安全使用
+            var data = mini.clone(data);
+            url = data.url;
+            grid.setUrl(data.url);
+//             grid.set(data.columns);
+            grid.set(doAdvColumns(data.columns));
+            $(".mini-grid-bottomCell").remove();
+    		$(".mini-grid-columns-view").remove();
+            var advData = {"data":[{}]};
+//             var prop = {url:""};
+ 			grid.set(advData);
+//             grid.load({isAdvQuery:true},function(e){
+//             	debugger;
+//             	console.info(e);
+            	
+//         	});
+        }
+    }
+    
+    //生成高级查询表格
+    function doAdvColumns(column){
+    	var newColumnArray = new Array();
+    	var newColumns = {};
+    	var values = column.columns;
+    	for(var i = 0; i<values.length;i++){
+    		if(values[i].isAdvQuery){
+	    		newColumnArray.push(values[i]);
+    		}
+    	}
+    	newColumns.columns = newColumnArray;
+    	console.info(newColumns);
+    	return newColumns;
+    }
+    
+	
+	  $("#advGrid").keyup(function () {  
+	         if (event.which == 13){ 
+	         	var row = grid.getSelected();
+	         	if(row){
+	         		onOk();
+	         	}
+	         }  
+	     });
+
+	    function GetData() {
+	        var row = grid.getSelected();
+	        return row;
+	    }
+	    function search() {
+	        grid.load({isAdvQuery:true});
+	    }
+	    function onKeyEnter(e) {
+	        search();
+	    }
+	    function onRowDblClick(e) {
+	        onOk();
+	    }
+	    //////////////////////////////////
+	    function CloseWindow(action) {
+	        if (window.CloseOwnerWindow) return window.CloseOwnerWindow(action);
+	        else window.close();
+	    }
+
+	    function onOk() {
+	    	
+	        CloseWindow("ok");
+	    }
+	    function onCancel() {
+	        CloseWindow("cancel");
+	    }
+     
+	    function isNull(a){
+	    	 if(a == null || a== undefined || a == ''){
+	    		return true; 
+	    	 }
+	    	return false;
+	     }
+      //]]> 	
+    </script>
+
+
+
+</body>
+</html>

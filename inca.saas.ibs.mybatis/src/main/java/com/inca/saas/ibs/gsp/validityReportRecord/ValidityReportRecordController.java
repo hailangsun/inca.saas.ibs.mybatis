@@ -24,7 +24,6 @@ import com.inca.saas.ibs.common.BaseController;
 import com.inca.saas.ibs.common.CommonService;
 import com.inca.saas.ibs.mapper.ValidityReportRecordMapper;
 import com.inca.saas.ibs.support.BaseDao;
-import com.inca.saas.ibs.support.Query;
 import com.inca.saas.ibs.support.QueryResult;
 import com.inca.saas.ibs.tablesetup.Column;
 import com.inca.saas.ibs.tablesetup.Column.Buttons;
@@ -64,11 +63,11 @@ public class ValidityReportRecordController extends BaseController {
 
 	@RequestMapping(value = "/miniuiSearch")
 	@ResponseBody
-	public QueryResult miniSearch(Query query, HttpServletResponse response) {
+	public QueryResult miniSearch(ValidityReportRecordQuery query, HttpServletResponse response) {
 		QueryResult search;
 		try {
-			String sql = "select * from pub_goods ";
-			search = baseDao.search(sql, query);
+			StringBuffer sql = getSql(query);
+			search = baseDao.search(sql.toString(), query);
 			return search;
 		} catch (Exception e) {
 			log.error("search error", e);
@@ -82,7 +81,9 @@ public class ValidityReportRecordController extends BaseController {
 		List<Column> columns = new ArrayList<>();
 		columns.add(new Column().type("indexcolumn").header("#"));
 		columns.add(new Column().editor(
-				new Editor().type("autocomplete").cls("mini-autocomplete").name("goods_code").enterQuery(true).style("width: 250px").onvaluechanged("onValueChanged").onkeyup("keyup")
+				new Editor().type("autocomplete").cls("mini-autocomplete")
+				.name("goods_code").enterQuery(true).style("width: 250px")
+				.onvaluechanged("onValueChanged").onkeyup("keyup")
 				.addButtons(new Buttons().handler("onGoods")).popupWidth("800").url("/IBSPUB010Hov/miniuiHovSearch")
 				.textField("goods_code").valueField("goods_code").onbeforeload("onBeforeLoad")
 				.addColumns(new Columns().field("goods_code").header("商品编码"))
@@ -90,15 +91,15 @@ public class ValidityReportRecordController extends BaseController {
 				.addColumns(new Columns().field("goods_unit").header("基本单位"))
 				.addColumns(new Columns().field("medicine_type").header("剂型"))
 				.addColumns(new Columns().field("factory_name").header("生产厂商"))
-				)
-				.field("goods_code").width(120).header("商品编号").headerAlign("center").headerStyle("color:#0175be").name("goods_code").displayField("goods_code"));
-		columns.add(new Column().field("goods_name").width(120).header("通用名"));
-		columns.add(new Column().field("goods_opcode").width(120).header("助记码"));
-		columns.add(new Column().field("goods_spec").width(120).header("规格"));
-		columns.add(new Column().field("goods_unit").width(120).header("基本单位"));
+				).field("goods_code").header("商品编号").headerAlign("center").headerStyle("color:#0175be").name("goods_code").displayField("goods_code").isAdvQuery(true));
+		columns.add(new Column().editor(new Editor().type("textbox")).field("goods_name").header("通用名").isAdvQuery(true));
+		columns.add(new Column().field("goods_opcode").header("助记码"));
+		columns.add(new Column().field("goods_spec").header("规格"));
+		columns.add(new Column().field("goods_unit").header("基本单位"));
 		map.put("columns", columns);
 		return map;
 	}
+	
 
 	@RequestMapping("/export")
 	public void exportDtl(HttpServletResponse response, HttpServletRequest request, HttpSession session,
@@ -139,4 +140,25 @@ public class ValidityReportRecordController extends BaseController {
 		System.out.println(inputFile);
 		return "1";
 	}
+	
+	//拼接sql
+	public StringBuffer getSql(ValidityReportRecordQuery validityReportRecordQuery){
+		StringBuffer sb = new StringBuffer();
+		sb.append(" select * from pub_goods ");
+		if(validityReportRecordQuery.getIsAdvQuery()){
+			
+		}else{
+			
+		}
+		
+		return sb;
+	}
+	
+	public String getAdvSql(ValidityReportRecordQuery validityReportRecordQuery){
+		StringBuffer sb = new StringBuffer();
+		
+		return sb.toString();
+	}
+	
+
 }

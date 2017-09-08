@@ -21,4 +21,10 @@ public class CommonController {
 		model.addAttribute("funPath", funPath.substring(1, funPath.length()));
 		return "common/miniStopReason";
 	}
+	
+	@RequestMapping({"/advQueryHome"})
+	public String advQueryHome(){
+		
+		return "ibs/common/advQueryHome";
+	}
 }

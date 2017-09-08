@@ -23,7 +23,8 @@
 				<tr>
 					<td style="white-space: nowrap;" align="center"><span>检索</span>
 						<input id="keyword" class="mini-textbox" emptyText="商品编码/生产厂商" style="width: 150px;" />&nbsp; 
-						<a class="mini-button" onclick="search()">查询</a></td>
+						<a class="mini-button" onclick="search()">查询</a>
+						<a class="mini-button" onclick="advSearch()">高级查询</a></td>
 				</tr>
 			</table>
 		</div>
@@ -48,7 +49,7 @@
 					</tr>
 				</table>
 		</div>
-		<div id="validityReportRecordGrid" class="mini-datagrid" style="height:750px;" url="/IBSGSP347/miniuiSearch" allowCellEdit="true" allowCellSelect="true">
+		<div id="validityReportRecordGrid" editNextOnEnterKey="true" class="mini-datagrid" style="height:750px;" url="/IBSGSP347/miniuiSearch" allowCellEdit="true" allowCellSelect="true">
 		</div>
 		
 	</div> 
@@ -61,11 +62,24 @@
 	mini.parse();
 	var grid = mini.get("validityReportRecordGrid");
 	var columns = /*[[${columns}]]*/;
+// 	console.info(mini.encode(columns));
 	var columnsTemp = mini.decode(columns);
-	columnsTemp.columns[1].editor.buttons[0].handler = onGoods;
+// 	columnsTemp.columns[1].editor.buttons[0].handler = onGoods;
 	grid.set(columnsTemp);
-	grid.load();
+	grid.load({},function(e){
+		console.info(e);
+		//移除表头
+// 		$(".mini-grid-bottomCell").remove();
+// 		$(".mini-grid-columns-view").remove();
+	});
 	
+	
+	grid.on("celleditenter",function(e){
+		debugger;
+		 var column = e.column;
+ 		 var row	= e.record;
+		alert(e.column.field);
+	});
 	
 	function toNext(e){
 		console.info(e);
@@ -146,7 +160,6 @@
 	
 	//商品
 	function onValueChanged(e) {
-		debugger;
 		 var data = e.selected;
 		 var row = grid.getSelected();
 	     if (data) {
@@ -195,6 +208,30 @@
 	             }
 	         });
 	     }
+	 
+	 function advSearch(){
+		 
+		 var url = "/common/advQueryHome";
+	     mini.open({
+	            url: url,
+	            title: "测试高级查询",
+	            width: 800,
+	            height: 400,
+	            onload: function () {       //弹出页面加载完成
+	                 var iframe = this.getIFrameEl();
+	                 var data = {action:"ok",columns:columns,url:"/IBSGSP347/miniuiSearch"};       
+	                 //调用弹出页面方法进行初始化
+	                 iframe.contentWindow.SetData(data); 
+	             }
+	     });
+		 
+// 		 grid.load({isAdvQuery:true},function(e){
+// 				console.info(e);
+// 				//移除表头
+// 		 		$(".mini-grid-bottomCell").remove();
+// 		 		$(".mini-grid-columns-view").remove();
+// 			});
+	 }
      
 	
       //]]> 	
