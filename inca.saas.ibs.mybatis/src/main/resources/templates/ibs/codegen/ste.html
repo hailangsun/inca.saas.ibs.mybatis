@@ -65,53 +65,48 @@ h4
 </head>
 <body>
  
- 
-<form id="form1" style="text-align: center;" action="/miniCodegen/design">
-    <table>
-     	<tr>
-            <td><label>功能名1：</label></td>
-            <td>
-                <input name="functionName" class="mini-textbox" vtype="minLength:5" required="true"/>
-
-            </td>
-        </tr>       
-        <tr>
-            <td><label>包路径：</label></td>
-            <td>
-                <input name="packageName" vtype="email" class="mini-textbox" required="true" />
-                
-            </td>    
-        </tr>
-        <tr>
-            <td><label>实体：</label></td>
-            <td>
-                <input name="entityName" class="mini-password" vtype="minLength:5" required="true"/>
-
-            </td>
-        </tr> 
-        <tr>
-           	<td >SQL：</td>
-               <td colspan="3">    
-                   <input name="baseSql" class="mini-textarea" style="width:378px;height: 300px" />
-             </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input value="下一步" type="submit" />
-            </td>
-        </tr>
-    </table>
-</form>
-
-<div id="iframeDiv" style="margin:0;">
-	<iframe id="miniuiFrame" src="/design?pattern=1" style="width: 100%;height:98%;border:none;">
-	</iframe>
-</div>
-
+<div class="parent-page"> 
+	<form id="form1" style="text-align: center;" action="/miniCodegen/design">
+	    <table>
+	     	<tr>
+	            <td><label>功能名1：</label></td>
+	            <td>
+	                <input name="functionName" class="mini-textbox" vtype="minLength:5" required="true"/>
 	
-
-
+	            </td>
+	        </tr>       
+	        <tr>
+	            <td><label>包路径：</label></td>
+	            <td>
+	                <input name="packageName" vtype="email" class="mini-textbox" required="true" />
+	                
+	            </td>    
+	        </tr>
+	        <tr>
+	            <td><label>实体：</label></td>
+	            <td>
+	                <input name="entityName" class="mini-textbox" vtype="minLength:5" required="true"/>
+	
+	            </td>
+	        </tr> 
+	        <tr>
+	           	<td >SQL：</td>
+	               <td colspan="3">    
+	                   <input name="baseSql" class="mini-textarea" style="width:378px;height: 300px" />
+	             </td>
+	        </tr>
+	        <tr>
+	            <td></td>
+	            <td>
+	                <button type="button" onclick="doDesign()">设计单表</button>
+	            </td>
+	        </tr>
+	    </table>
+	</form>
+</div>
+<div id="iframeDiv" style="margin:0;display:none;">
+	<iframe id="miniuiFrame" src="/miniCodegen/design?pattern=1" style="width: 100%;height:800px;border:none;"></iframe>
+</div>
     <script type="text/javascript">
         
        // mini.parse();
@@ -124,7 +119,19 @@ h4
 //             //在iframe中调用父页面中定义的变量
 // //             alert(parent.hello);
 //         });
-       
+
+       function doDesign(){
+    	   $(".parent-page").hide();
+    	   $("#iframeDiv").show();
+       }
+       function onShow(){
+    	   $(".parent-page").show();
+    	   $("#iframeDiv").hide();
+       }
+       function getData(){
+    	   var data = $("#form1").serialize();
+    	   return data;
+       }
     </script>
     
 

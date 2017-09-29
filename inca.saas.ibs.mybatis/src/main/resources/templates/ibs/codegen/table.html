@@ -33,6 +33,7 @@
 			<table border="0"   style="width: 100%;">
 				<tr>
 					<td style="width: 50%;">
+					<a class="mini-button mini-ibs-btn" iconCls="icon-add" id="addRow" onclick="getData()" plain="true" >获取配置信息</a> 
 					<a class="mini-button mini-ibs-btn" iconCls="icon-add" id="addRow" onclick="addRow()" plain="true" >增加</a> 
 					<a class="mini-button mini-ibs-btn" iconCls="icon-remove" id="removeDocRow" onclick="removeRow()" plain="true">删除</a>
 					</td>
@@ -126,7 +127,10 @@
         function removeDtlRow(){
         	mini.alert("removeDtlRow");
         }
-	
+		function getData(){
+			var data = window.parent.parent.getData();
+	    	alert(data);
+		}
       //]]> 	
     </script>
 

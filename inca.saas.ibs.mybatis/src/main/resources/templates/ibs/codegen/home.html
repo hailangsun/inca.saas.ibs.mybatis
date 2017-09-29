@@ -38,7 +38,7 @@
             tab = tabs.addTab(tab);            
             //tab body
             var el = tabs.getTabBodyEl(tab);
-            el.innerHTML = '<iframe id="forIframe" src="/miniCodegen/ste?pattern=1" style="width:100%;height:100%;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"  bodyStyle="padding:0;border:0;"></iframe>';
+            el.innerHTML = '<iframe id="forIframe" src="/miniCodegen/ste" style="width:100%;height:100%;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"  bodyStyle="padding:0;border:0;"></iframe>';
             //active tab
             tabs.activeTab(tab);
 
@@ -61,10 +61,6 @@
         }
 
         ///////////////////////////////////////////////////////////////
-		function onShow(){
-        	debugger;
-			$("#iframeDiv").hide();
-		}
 
 
     </script>

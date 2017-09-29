@@ -28,7 +28,7 @@ public class CodegenController {
 	 * @return
 	 */
 	@RequestMapping({"/ste"})
-	public String ste(Model model,@RequestParam String pattern){
+	public String ste(Model model){
 		return "ibs/codegen/ste";
 	}
 	/**
@@ -47,11 +47,17 @@ public class CodegenController {
 	 * @return
 	 */
 	@RequestMapping({"/design"})
-	public String tabs(Model model,SteCodeGen codeGen){
-		System.out.println(codeGen);
+	public String tabs(Model model,@RequestParam String pattern){
 		//获取实体，根据实体生成，表数据
-		//
-		model.addAttribute("packageName", codeGen.getPackageName());
+		String patternName="";
+		if("1".equals(pattern)){
+			patternName="单表";
+		}else if("2".equals(pattern)){
+			patternName="总单";
+		}else if("3".equals(pattern)){
+			patternName="细单";
+		}
+		model.addAttribute("patternName", patternName);
 		return "ibs/codegen/design";
 	}
 	/**

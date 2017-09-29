@@ -66,12 +66,12 @@ h4
 <body>
    
 <div id="tabs1" class="mini-tabs" activeIndex="0" style="width:100%;height:100%;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"  bodyStyle="padding:0;border:0;">
-    <div title="表单">
+    <div th:title="${patternName}+'表单'">
         <div class="mini-fit">
            <iframe src="/miniCodegen/form" style="width:100%;height:800px;"></iframe>
         </div>
     </div>
-    <div title="表格" iconCls="icon-cut" >
+    <div th:title="${patternName}+'表格'" iconCls="icon-cut" >
         <iframe src="/miniCodegen/table" style="width:100%;height:800px;"></iframe>
     </div>
 </div>
@@ -87,10 +87,7 @@ h4
 </body>
 <script th:inline="javascript">
 	//<![CDATA[
-	           var packageName=/*[[${packageName}]]*/;
-	           $(document).ready(function(){
-	        	   alert(packageName);
-	           });
+         
 	//]]> 	
     </script>
 </html>
