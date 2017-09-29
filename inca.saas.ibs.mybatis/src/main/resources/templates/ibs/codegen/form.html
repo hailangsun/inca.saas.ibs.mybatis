@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+<title>通用入库单（门店）</title>
+<meta charset="UTF-8"></meta>
+<link th:href="@{/lib/miniui/demo.css}" rel="stylesheet" type="text/css" />
+<script th:src="@{/lib/miniui/boot.js}" type="text/javascript"></script> 
+<style type="text/css">
+.mini-pager-size .mini-combobox{
+	width:63px;
+}
+.mini-buttonedit-input{
+	line-height:20px;
+}
+
+.modal-backdrop {
+  opacity: 0 !important;
+  filter: alpha(opacity=0) !important;
+}
+
+.mini-grid-summaryRow-view tr:nth-child(2) td{
+	text-align: center;
+	padding: 10px 0;
+	font-size: 14px;
+	background:#FFFDCF;
+	font-weight: bold;
+}
+</style>
+
+</head>
+<body>
+	<div class="home-page">
+		<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;padding-top:10px;padding-bottom:5px;">
+			<table border="0" cellpadding="1" cellspacing="2"  style="width: 100%;">
+				<tr>
+					<td style="width: 100%;">
+					<a class="mini-button mini-ibs-btn" iconCls="icon-add" id="addRow" onclick="addRow()" plain="true" >增加</a> 
+					<a class="mini-button mini-ibs-btn" iconCls="icon-remove" id="removeDocRow" onclick="removeRow()" plain="true">删除</a>
+					<a class="mini-button mini-ibs-btn" onclick="cancelToParent()" plain="true">返回</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="doc_grid" class="mini-datagrid" style="height:500px;" url="/IBSWAR122/miniuiSearch"  allowCellEdit="true" allowCellSelect="true" multiSelect="true" 
+        editNextOnEnterKey="true"  editNextRowCell="true">
+			<div property="columns">
+				<div type="indexcolumn" headerAlign="center">#</div>
+				<div type="checkcolumn" ></div>
+				 <div name="title"  field="title" headerAlign="center" allowSort="true" width="150" >标题
+                	<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 </div>
+           		 <div name="name"  field="name" headerAlign="center" allowSort="true" width="150" >字段名
+                	<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 </div>
+	             <div type="comboboxcolumn" autoShowPopup="true" name="metaType" field="metaType" width="100" allowSort="true"  align="center" headerAlign="center">字段类型
+	                <input property="editor" class="mini-combobox" style="width:100%;" data="MetaType" />                
+	             </div>
+	             <div type="comboboxcolumn" autoShowPopup="true" name="comp" field="comp" width="100" allowSort="true"  align="center" headerAlign="center">控件类型
+	                <input property="editor" class="mini-combobox" style="width:100%;" data="Comp" />                
+	             </div>
+				<div type="checkboxcolumn" field="dbCol" trueValue="1" falseValue="0" width="60" headerAlign="center">数据库字段</div>
+				<div name="width"  field="width" headerAlign="center" allowSort="true" width="150" >宽度
+                	<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 </div>        
+      		 	<div type="checkboxcolumn" field="readOnly" trueValue="1" falseValue="0" width="60" headerAlign="center">是否只读</div>
+      		 	<div type="checkboxcolumn" field="hidden" trueValue="1" falseValue="0" width="60" headerAlign="center">是否隐藏</div>
+      		 	<div type="checkboxcolumn" field="advQuery" trueValue="1" falseValue="0" width="60" headerAlign="center">高级查询</div>
+      		 	<div type="checkboxcolumn" field="query" trueValue="1" falseValue="0" width="60" headerAlign="center">普通查询</div>
+      		 	<div type="checkboxcolumn" field="required" trueValue="1" falseValue="0" width="60" headerAlign="center">必填</div>
+      		 	<div type="checkboxcolumn" field="keyword" trueValue="1" falseValue="0" width="60" headerAlign="center">关键字过滤</div>
+      		 	<div type="checkboxcolumn" field="virtual" trueValue="1" falseValue="0" width="60" headerAlign="center">虚拟列</div>
+      		 	<div name="convert"  field="convert" headerAlign="center" allowSort="true" width="150" >转换器
+                	<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 </div>
+			</div>
+		</div>
+		<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;padding-top:10px;padding-bottom:5px;">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 100%;">
+					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="addDtlRow" onclick="addSysRow()">新增系统选项</a> 
+					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="removeDtlRow" onclick="addCustomRow()">新增自定义选项</a>
+					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="removeDtlRow" onclick="addHovRow()">新增Hov选项</a>
+					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-remove" id="removeDtlRow" onclick="removeDtlRow()">删除</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="dtl_grid" class="mini-datagrid" style="height:300px;" url="/IBSWAR122/miniuiDtlSearch" idField="id" showPager="false" allowResize="true" multiSelect="true">
+			<div property="columns">
+				<div type="indexcolumn" headerAlign="center">#</div>
+				<div type="checkcolumn" field="checkcolumn"></div>
+				<div field="goods_code" headerAlign="center" allowSort="true" width="130px">控件类型</div>
+				<div field="goods_name" headerAlign="center" allowSort="true">区域</div>
+				
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	//<![CDATA[
+	//状态下拉选项
+	mini.parse();
+	var doc_grid = mini.get("doc_grid");
+    var dtl_grid = mini.get("dtl_grid");
+	     function addRow() {          
+            var newRow = { name: "New Row" };
+            doc_grid.addRow(newRow, 0);
+
+            doc_grid.beginEditCell(newRow, "LoginName");
+        }
+        function removeRow() {
+            var rows = doc_grid.getSelecteds();
+            if (rows.length > 0) {
+            
+            	doc_grid.removeRows(rows, true);                
+            }
+        }
+        var MetaType = [
+                       { id: "java.lang.Integer", text: 'Integer' },
+                       { id: "java.lang.String", text: 'String'},
+                       { id: "java.sql.Timestamp", text: 'Timestamp'},
+                       { id: "java.lang.Boolean", text: 'Boolean'},
+                       { id: "java.sql.Date", text: 'Date'},
+                       { id: "java.math.BigDecimal", text: 'BigDecimal'},
+        ];
+        
+        var Comp = [
+                        { id: "date", text: '日期' },
+                        { id: "datetime", text: '日期带时间'},
+                        { id: "text", text: '文本'},
+                        { id: "hov", text: 'hov'}
+         ];
+        
+        function addSysRow(){
+        	mini.alert("addSysRow");
+        }
+        function addCustomRow(){
+        	mini.alert("addCustomRow");
+        }
+        function addHovRow(){
+        	mini.alert("addHovRow");
+        }
+        
+        function removeDtlRow(){
+        	mini.alert("removeDtlRow");
+        }
+        
+        function cancelToParent(){
+        	parent.onShow();
+		}
+	
+      //]]> 	
+    </script>
+
+</body>
+</html>

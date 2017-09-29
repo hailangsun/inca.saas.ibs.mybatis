@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model title="采购计划总单" type="doc" entity="com.inca.saas.ibs.entity.pur.SuPlanDoc">
+<form>
+    <field name="supply_id"  title="总单供应商id" metaType="java.lang.Integer" dbCol="true"  width="100px"   readOnly="true" hidden="true"/>
+    <field name="staff_id"  title="staff_id" metaType="java.lang.Integer" dbCol="true"  width="100px"   readOnly="true" hidden="true"/>
+    <field name="dept_id"  title="dept_id" metaType="java.lang.Integer" dbCol="true"  width="100px"   readOnly="true" hidden="true"/>
+    <field name="id"  title="ID" metaType="java.lang.Integer" dbCol="true"  width="100px"  readOnly="true" hidden="true"/>
+    
+    <field name="document_code" metaType="java.lang.String" comp="text" colspan="3" dbCol="true"  title="单据编号" width="100px" readOnly="true" advQuery="true" keyword="true" />
+    <field name="busi_date" metaType="java.sql.Timestamp" comp="date" dbCol="true"  title="业务日期" readOnly="true" width="100px" query="true" advQuery="true" />
+    <field name="come_from" metaType="java.lang.Integer" comp="combobox"  dbCol="true" title="来源" width="100px"   readOnly="true" />
+    <field name="supply_name" metaType="java.lang.String" title="供应商" width="100px" keyword="true" query="true" advQuery="true" required="true"/>
+    <field name="staff_user_name" metaType="java.lang.String" title="业务员" width="100px"  keyword="false"  advQuery="true" required="true"/>
+    <field name="dept_name" metaType="java.lang.String" title="业务部门" width="100px"  keyword="false" advQuery="true" required="true"/>
+    <field name="memo"  title="备注" metaType="java.lang.String" dbCol="true"  width="100px"  />
+    <field name="wf_usestatus"  title="审批状态" metaType="java.lang.Integer" dbCol="true"  width="100px"  required="true"  readOnly="true"/>
+    <field name="status"  title="状态" metaType="java.lang.Integer" dbCol="true"  width="100px"  required="true" query="true" advQuery="true"  readOnly="true"/>
+    <field name="gen_push_flag" metaType="java.lang.Boolean" title="整单推送生成" comp="checkbox" hidden="false" dbCol="true"  width="100px"   readOnly="true"/>
+    
+    <field name="submit_user_name"  title="提交人" metaType="java.lang.String" dbCol="false" hidden="true"  width="100px" />
+    <field name="submit_date" metaType="java.sql.Timestamp" comp="date" dbCol="false"  title="提交日期" hidden="true" readOnly="true" width="100px"   advQuery="true"/>
+    <field name="create_user_name"  title="制单人" metaType="java.lang.String" dbCol="true"  width="100px"   hidden="true"/>
+    <field name="create_time" metaType="java.sql.Timestamp" comp="date" dbCol="true"  title="制单日期"  readOnly="true" width="100px"   advQuery="true" hidden="true"/>
+    <field name="stop_user_name" metaType="java.lang.String" title="终止人" width="100px"  dbCol="false" hidden="true"/>
+    <field name="stop_date" metaType="java.sql.Timestamp" comp="datetime" dbCol="false"  title="终止时间" readOnly="true" width="100px"  hidden="true"/>
+    <field name="stop_reason" metaType="java.lang.String" title="终止原因" width="100px"  dbCol="false" hidden="true"/>
+    <field name="supply_code" metaType="java.lang.String" title="供应商编码" width="100px"  keyword="true" advQuery="true" required="true" hidden="true"/>
+    
+</form>
+<!-- <query>
+    <field name="document_code" ></field>
+    <field name="zb_create_flag"></field>
+    <field name="busi_date"></field>
+    <field name="create_time" ></field>
+    <field name="stout_type" ></field>
+    <field name="company_name"></field>
+    <field name="company_type"></field>
+</query> -->
+<table>
+    document_code,busi_date,supply_name,staff_user_name,dept_name,wf_usestatus,status,memo,submit_user_name,submit_date,create_user_name,gen_push_flag,stop_user_name,stop_date,stop_reason
+</table>
+<comps>
+    <combobox field="come_from" keyword="IBS_DOCUMENT_COME_FROM" />
+    <combobox field="status" keyword="IBS_STATUS" />
+    <combobox field="wf_usestatus" keyword="WORKFLOW_WFUSESTATUS" />
+    
+    <hov field="supply_name" queryField="supply_id" url="/hov/IBSPUB008/table/miniuihome/miniuiHovSearch" scope="表格,表单,查询,高级查询" valueFrom="id" textFrom="supply_name">
+        <hovMapping from="id" to="supply_id"></hovMapping>
+        <hovMapping from="supply_name" to="supply_name"></hovMapping>
+	</hov>
+	<hov field="staff_user_name" url="/hov/IBSPUB002/table/miniuihome/miniuiHovSearch" scope="表格,表单,查询,高级查询" valueFrom="id" textFrom="user_name">
+        <hovMapping from="id" to="staff_id"></hovMapping>
+        <hovMapping from="user_name" to="staff_user_name"></hovMapping>
+	</hov>
+	<hov field="dept_name" url="/hov/IBSPUB001/table/miniuihome/miniuiHovSearch" scope="表格,表单,查询,高级查询">
+        <hovMapping from="id" to="dept_id"></hovMapping>
+        <hovMapping from="dept_name" to="dept_name"></hovMapping>
+	</hov>
+</comps>
+<buttons>
+ 	<button onClick="doApproveSelected" separator="true">提交</button>
+ 	<button onClick="doBackApproveSelected"  scope="表格">回退提交</button>
+ 	<button onClick="queryWorkFlowSelected" scope="表格">查看审批</button>
+ 	<button onClick="genSuOrder" >生成订单</button>
+ 	<button onClick="doStop" scope="表格">终止</button>
+</buttons>
+<forbiddens>
+    <!--<button scope="表格,表单">导出</button>-->
+</forbiddens>
+</model>

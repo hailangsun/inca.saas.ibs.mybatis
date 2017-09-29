@@ -22,9 +22,4 @@ public class CommonController {
 		return "common/miniStopReason";
 	}
 	
-	@RequestMapping({"/advQueryHome"})
-	public String advQueryHome(){
-		
-		return "ibs/common/advQueryHome";
-	}
 }

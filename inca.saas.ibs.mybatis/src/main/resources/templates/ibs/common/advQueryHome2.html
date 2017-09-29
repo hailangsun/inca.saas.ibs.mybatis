@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<head>
+<title>高级查询</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<script th:src="@{/lib/miniui/boot.js}" type="text/javascript"></script>
+</head>
+<body th:fragment="">
+<form id="advForm" method="post">
+	<fieldset style="border:solid 1px #aaa;padding:3px;">
+		<div style="padding-left:11px;padding-bottom:5px; height:230px;overflow-y: auto">
+			<table style="table-layout:fixed;" id="advTable">
+				<tr id="advTr"></tr>
+			</table>
+		</div>
+		<div style="text-align:center;padding:10px;">
+			<a class="mini-button" onclick="onOk" style="width:60px;margin-right:20px;">查询</a>
+			<a class="mini-button" onclick="onClear" style="width:60px;margin-right:20px;">清除</a>
+			<a class="mini-button" onclick="onCancel" style="width:60px;">取消</a>
+		</div>
+	</fieldset>
+</form>
+
+<script th:inline="javascript">
+    //<![CDATA[
+    
+    var advQueryColumns = /*[[${advQueryColumns}]]*/;
+    //生成表单
+    
+	//标准方法接口定义
+    function SetData(data) {
+   	  if (data.action == "ok") {
+   		  var data = mini.clone(data);
+             url = data.url;
+             //grid.setUrl(data.url);
+             debugger;
+             
+              $("#advTr").append($("<td style="width:70px;text-indent:13px;" class='required-label'>单据类型</td><td style='width:110px;'><input class='mini-textbox' width='175px' value='111' /></td>"));
+              mini.parse();
+   	  }
+    }
+    
+    //]]>
+</script>
+</body>
+</html>

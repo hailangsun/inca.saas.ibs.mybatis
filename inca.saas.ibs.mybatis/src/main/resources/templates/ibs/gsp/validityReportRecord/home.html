@@ -62,8 +62,8 @@
 	mini.parse();
 	var grid = mini.get("validityReportRecordGrid");
 	var columns = /*[[${columns}]]*/;
-// 	console.info(mini.encode(columns));
 	var columnsTemp = mini.decode(columns);
+// 	console.info(mini.encode(columns));
 // 	columnsTemp.columns[1].editor.buttons[0].handler = onGoods;
 	grid.set(columnsTemp);
 	grid.load({},function(e){
@@ -210,8 +210,7 @@
 	     }
 	 
 	 function advSearch(){
-		 
-		 var url = "/common/advQueryHome";
+		 var url = "/IBSGSP347/advQueryHome";
 	     mini.open({
 	            url: url,
 	            title: "测试高级查询",

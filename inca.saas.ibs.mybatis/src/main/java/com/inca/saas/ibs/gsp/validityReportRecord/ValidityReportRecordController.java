@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import com.inca.saas.ibs.common.AdvQueryModel;
 import com.inca.saas.ibs.common.BaseController;
 import com.inca.saas.ibs.common.CommonService;
 import com.inca.saas.ibs.mapper.ValidityReportRecordMapper;
@@ -44,6 +46,27 @@ public class ValidityReportRecordController extends BaseController {
 	@ModelAttribute("funcPath")
 	String funcPath() {
 		return FUNC_PATH;
+	}
+	
+	@RequestMapping({"/advQueryHome"})
+	public String advQueryHome(Model model){
+		model.addAttribute("advQueryColumns", advQueryColumns());
+		return "ibs/common/advQueryHome2";
+	}
+	
+	public Vector<AdvQueryModel> advQueryColumns() {
+		Map<String, Object> map = getColumns();
+		List<Column> listColumn = (List<Column>) map.get("columns");
+		Vector<AdvQueryModel> advQueryModel = new Vector<>();
+		for (int i = 0; i < listColumn.size(); i++) {
+			AdvQueryModel advQueryModelTemp = new AdvQueryModel();
+			if(listColumn.get(i).getIsAdvQuery()){
+				advQueryModelTemp.setField(listColumn.get(i).getField());
+				advQueryModelTemp.setHeader(listColumn.get(i).getHeader());
+				advQueryModel.add(advQueryModelTemp);
+			}
+		}
+		return advQueryModel;
 	}
 
 	@Autowired
@@ -93,7 +116,7 @@ public class ValidityReportRecordController extends BaseController {
 				.addColumns(new Columns().field("factory_name").header("生产厂商"))
 				).field("goods_code").header("商品编号").headerAlign("center").headerStyle("color:#0175be").name("goods_code").displayField("goods_code").isAdvQuery(true));
 		columns.add(new Column().editor(new Editor().type("textbox")).field("goods_name").header("通用名").isAdvQuery(true));
-		columns.add(new Column().field("goods_opcode").header("助记码"));
+		columns.add(new Column().field("goods_opcode").header("助记码").isAdvQuery(true));
 		columns.add(new Column().field("goods_spec").header("规格"));
 		columns.add(new Column().field("goods_unit").header("基本单位"));
 		map.put("columns", columns);

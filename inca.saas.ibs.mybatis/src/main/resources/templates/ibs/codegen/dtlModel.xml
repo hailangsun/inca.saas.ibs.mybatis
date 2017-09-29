@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model title="采购计划细单" type="dtl" entity="com.inca.saas.ibs.entity.pur.SuPlanDtl">
+<form>
+    <field name="id"  title="单据ID" metaType="java.lang.Integer" dbCol="true"  width="150px"  hidden="true" />
+    <field name="goods_id"  title="商品ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    <field name="supply_id"  title="供应商ID" metaType="java.lang.Integer" dbCol="true"  width="50px" hidden="false" />
+    <field name="sal_custom_id"  title="限销客户ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    <field name="sal_consigner_id"  title="限销委托人ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    <field name="sal_deputy_id"  title="限销代理人ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    <field name="lot_id"  title="批号ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    <field name="last_supply_id"  title="最近供应商ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    <field name="max_supply_id"  title="最高供应商ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    <field name="min_supply_id"  title="最低供应商ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    <field name="stop_user_id"  title="终止人ID" metaType="java.lang.Integer" dbCol="true"  width="50px"   hidden="false" />
+    
+    <field name="goods_code"  title="商品编码" metaType="java.lang.String" dbCol="false"  width="150px" required="true"  />
+    <field name="goods_incode"  title="内部编码" metaType="java.lang.String" dbCol="false"  width="150px"  readOnly="true"  />
+    <field name="goods_name"  title="通用名" metaType="java.lang.String" dbCol="false"  width="150px"  readOnly="true" />
+    <field name="trade_mark"  title="商标" metaType="java.lang.String" dbCol="false"  width="150px"  readOnly="true" />
+    <field name="goods_spec"  title="规格" metaType="java.lang.String" dbCol="false"  width="150px" readOnly="true"/>
+    <field name="factory_name"  title="生产厂商" metaType="java.lang.String" dbCol="false"  width="150px"  readOnly="true" />
+    <field name="supply_name" title="供应商" metaType="java.lang.String"  width="150px" />
+    <field name="goods_unit"  title="基本单位" metaType="java.lang.String" dbCol="false"  width="150px"  readOnly="true" />
+    <field name="goods_qty"  title="数量" metaType="java.math.BigDecimal" dbCol="true"  width="150px"  required="true" mask="SYS.11" total="true"/>
+    <field name="reference_goods_qty"  title="参考库存" metaType="java.math.BigDecimal" dbCol="true"  width="150px" mask="SYS.11" total="true" readOnly="true"/>
+    <field name="unit_price"  title="单价" metaType="java.math.BigDecimal" dbCol="true"  width="150px"   mask="SYS.13"/>
+    <field name="amount_money"  title="金额" metaType="java.math.BigDecimal" dbCol="true"  width="150px" readOnly="true" mask="SYS.12" total="true"/>
+    <field name="lot_no"  title="批号" metaType="java.lang.String" dbCol="false"  width="150px" />
+    <field name="prod_date" title="生产日期" metaType="java.sql.Timestamp" comp="date" dbCol="false"   width="150px" />
+    <field name="invalid_date" title="有效期至" metaType="java.sql.Timestamp" comp="date" dbCol="false"   width="150px" />
+    <field name="custom_name" title="限销客户" metaType="java.lang.String"  width="150px" />
+    <field name="consigner_name" title="限销委托人" metaType="java.lang.String"  width="150px" />
+    <field name="deputy_name" title="限销代理人" metaType="java.lang.String"  width="150px" />
+    <field name="memo"  title="备注" metaType="java.lang.String" dbCol="true"  width="150px" />
+    <field name="last_supply_name"  title="最近供应商" metaType="java.lang.String" dbCol="false"  width="150px" readOnly="true"/>
+	<field name="self_last_price"  title="供应商最近进价" metaType="java.math.BigDecimal" dbCol="true"  width="150px"   mask="#,0.00" total="true" readOnly="true"/>
+	<field name="last_price"  title="货品最近进价" metaType="java.math.BigDecimal" dbCol="true"  width="150px"   mask="#,0.00" total="true" readOnly="true"/>
+	<field name="max_supply_name"  title="最高供应商" metaType="java.lang.String" dbCol="false"  width="150px" readOnly="true" />
+	<field name="self_max_price"  title="供应商最高进价" metaType="java.math.BigDecimal" dbCol="true"  width="150px"   mask="#,0.00" total="true" readOnly="true"/>
+	<field name="max_price"  title="货品最高进价" metaType="java.math.BigDecimal" dbCol="true"  width="150px"   mask="#,0.00" total="true" readOnly="true"/>
+	<field name="min_supply_name"  title="最低供应商" metaType="java.lang.String" dbCol="false"  width="150px" readOnly="true"/>
+	<field name="self_min_price"  title="供应商最低进价" metaType="java.math.BigDecimal" dbCol="true"  width="150px"   mask="#,0.00" total="true" readOnly="true"/>
+	<field name="min_price"  title="货品最低进价" metaType="java.math.BigDecimal" dbCol="true"  width="150px"  mask="#,0.00" total="true" readOnly="true"/>
+    <field name="status"  title="状态" metaType="java.lang.Integer" dbCol="true"  width="150px" query="true"  readOnly="true"/>
+    <field name="lsPrice"  title="零售价" metaType="java.math.BigDecimal" convert="suplan_convert"  width="150px" readOnly="true"/>
+    <field name="lsPrice1"  title="零售价1111" metaType="java.math.BigDecimal" convert="suplan_convert"  width="150px" readOnly="true"/>
+   
+    <field name="stop_user_name"  title="终止人" metaType="java.lang.String" dbCol="false" width="150px" readOnly="true" />
+	<field name="stop_date" title="终止时间" metaType="java.sql.Timestamp" dbCol="false" comp="date" readOnly="true"  width="150px" />
+    <field name="stop_reason"  title="终止原因" metaType="java.lang.String" dbCol="false" width="150px" readOnly="true"/>
+	<field name="goods_models"  title="器械型号" metaType="java.lang.String" dbCol="false"  width="150px"  readOnly="true" />
+</form>
+<table>
+   goods_code,goods_incode,goods_name,trade_mark,goods_spec,factory_name,supply_name,goods_unit,goods_qty,reference_goods_qty,unit_price,amount_money,lot_no,prod_date,invalid_date,custom_name,consigner_name,deputy_name,memo,last_supply_name,self_last_price,last_price,max_supply_name,self_max_price,min_price,max_price,status,stop_user_name,stop_date,stop_reason,goods_models,lsPrice
+</table>
+<comps>
+    <combobox field="status" keyword="IBS_STATUS" />
+    <hov field="goods_code" url="/hov/IBSPUB010/table/miniuihome/suPlanSearch" scope="表格,表单,查询,高级查询" autoComplete="true" searchUrl="/hov/IBSPUB010/table/suPlanSearch" >
+        <hovMapping from="id" to="goods_id"></hovMapping>
+        <hovMapping from="goods_code" to="goods_code"></hovMapping>
+        <hovMapping from="goods_name" to="goods_name"></hovMapping>
+        <hovMapping from="goods_incode" to="goods_incode"></hovMapping>
+        <hovMapping from="trade_mark" to="trade_mark"></hovMapping>
+        <hovMapping from="goods_spec" to="goods_spec"></hovMapping>
+        <hovMapping from="factory_name" to="factory_name"></hovMapping>
+        <hovMapping from="goods_unit" to="goods_unit"></hovMapping>
+        <hovMapping from="goods_models" to="goods_models"></hovMapping>
+        <hovMapping from="sal_goods_qty" to="reference_goods_qty"></hovMapping>
+        
+        
+        <field name="goods_code" title="商品编码"></field>
+        <field name="goods_name" title="商品名"></field>
+        <field name="goods_unit" title="基本单位"></field>
+        <field name="medicine_type" title="剂型"></field>
+    </hov>
+    <hov field="supply_name" url="/hov/IBSPUB008/table/miniuihome/miniuiHovSearch" scope="表格,表单,查询,高级查询">
+        <hovMapping from="id" to="supply_id"></hovMapping>
+        <hovMapping from="supply_name" to="supply_name"></hovMapping>
+	</hov>
+    <hov field="custom_name" url="/hov/IBSPUB007/table/miniuihome/miniuiHovSearch" scope="表格,表单,查询,高级查询">
+        <hovMapping from="id" to="sal_custom_id"></hovMapping>
+        <hovMapping from="custom_name" to="custom_name"></hovMapping>
+	</hov>
+	<hov field="consigner_name" url="/hov/IBSPUB013/table/miniuihome/miniuiHovSearch" scope="表格,表单,查询,高级查询">
+        <hovMapping from="id" to="sal_consigner_id"></hovMapping>
+        <hovMapping from="consigner_name" to="consigner_name"></hovMapping>
+	</hov>
+	<hov field="deputy_name" url="/hov/IBSPUB026/table/miniuihome/miniuiHovSearch" scope="表格,表单,查询,高级查询">
+        <hovMapping from="id" to="sal_deputy_id"></hovMapping>
+        <hovMapping from="deputy_name" to="deputy_name"></hovMapping>
+	</hov>
+</comps>
+<buttons>
+	<button onClick="dtlDoStop" >终止</button>
+	<button onClick="doDtlHistoryPrice" >历史价格</button>
+	<button onClick="importExcel" scope="表格">导入</button>
+	<button onClick="doImportTemp" scope="表格">导入模板</button>
+</buttons>
+<forbiddens>
+   <!--  <button scope="表格">新增</button> -->
+</forbiddens>
+</model>
