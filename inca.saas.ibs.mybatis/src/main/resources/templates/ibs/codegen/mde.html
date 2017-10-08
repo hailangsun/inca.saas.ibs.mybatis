@@ -65,52 +65,72 @@ h4
 </head>
 <body>
  
- 
-<div id="form1" style="text-align: center;">
-    <table>
-     	<tr>
-            <td><label>功能名：</label></td>
-            <td>
-                <input name="pwd" class="mini-textbox" vtype="minLength:5" required="true"/>
-
-            </td>
-        </tr>       
-        <tr>
-            <td><label>包路径：</label></td>
-            <td>
-                <input name="username" vtype="email" class="mini-textbox" required="true" />
-                
-            </td>    
-        </tr>
-        <tr>
-            <td><label>实体：</label></td>
-            <td>
-                <input name="pwd" class="mini-textbox" vtype="minLength:5" required="true"/>
-
-            </td>
-        </tr> 
-        <tr>
-           	<td >SQL：</td>
-               <td colspan="3">    
-                   <input name="remarks" class="mini-textarea" style="width:378px;height: 300px" />
-             </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td>
-                <input value="下一步" type="button" onclick="submitForm()" />
-            </td>
-        </tr>
-    </table>
+<div class="parent-page"> 
+	<form id="mdeForm" style="text-align: center;" action="/miniCodegen/design">
+	    <table>
+	     	<tr>
+	            <td><label>总单实体路径：</label></td>
+	            <td>
+	                <input name="entityName" style="width:378px;" class="mini-textbox" required="true"/>
+	            </td>
+	        </tr>       
+	      	<tr>
+	            <td><label>细单实体路径：</label></td>
+	            <td>
+	                <input name="dtlEntityName" style="width:378px;" class="mini-textbox" required="true"/>
+	            </td>
+	        </tr>    
+	        <tr>
+	           	<td >SQL：</td>
+	               <td colspan="3">    
+	                   <input name="baseSql" class="mini-textarea" style="width:378px;height: 300px" />
+	             </td>
+	        </tr>
+	        <tr>
+	            <td></td>
+	            <td>
+	                <button type="button" onclick="docMde()">设计总单细目表</button>
+	                
+	                 <button type="button" onclick="dtlMde()">设计细单细目表</button>
+	            </td>
+	        </tr>
+	    </table>
+	</form>
 </div>
-
-
-
-
-
     <script type="text/javascript">
-        mini.parse();
-
+        
+       function docMde(){
+    	   debugger;
+   			var docDialog = $('<div id="docIframeDiv" style="margin:0;"><iframe id="miniuiDocFrame" style="width: 100%;height:800px;border:none;"/></div>');
+   			$("body").append(docDialog);
+   			var url="/miniCodegen/design?pattern=2";
+   			$("#miniuiDocFrame").attr("src",url);
+   			$(".parent-page").hide();
+   			$("#docIframeDiv").show();
+       }
+       
+       function dtlMde(){
+    	   debugger;
+   			var dtlDialog = $('<div id="dtlIframeDiv" style="margin:0;"><iframe id="miniuiDtlFrame" style="width: 100%;height:800px;border:none;"/></div>');
+   			$("body").append(dtlDialog);
+   			var url="/miniCodegen/design?pattern=3";
+   			$("#miniuiDtlFrame").attr("src",url);
+   			$(".parent-page").hide();
+   			$("#dtlIframeDiv").show();
+       }
+       
+       function onShow(){
+    	   $(".parent-page").show();
+    	   $("#docIframeDiv").hide();
+    	   $("#dtlIframeDiv").hide();
+       }
+       function getData(){
+//     	   var data = $("#steform").serialize();
+    	   var steForm 	= new mini.Form("mdeForm");
+    	   var steFormData = steForm.getData();            
+           var steFormJson = mini.encode([steFormData]);
+    	   return steFormJson;
+       }
     </script>
     
 

@@ -34,16 +34,17 @@
 			<table border="0" cellpadding="1" cellspacing="2"  style="width: 100%;">
 				<tr>
 					<td style="width: 100%;">
-					<a class="mini-button mini-ibs-btn" iconCls="icon-add" id="addRow" onclick="getData()" plain="true" >获取配置信息</a> 
 					<a class="mini-button mini-ibs-btn" iconCls="icon-add" id="addRow" onclick="addRow()" plain="true" >增加</a> 
 					<a class="mini-button mini-ibs-btn" iconCls="icon-remove" id="removeDocRow" onclick="removeRow()" plain="true">删除</a>
 					<a class="mini-button mini-ibs-btn" onclick="cancelToParent()" plain="true">返回</a>
+					<span class="separator"></span> 
+					<a class="mini-button mini-ibs-btn" iconCls="icon-add" id="addRow" onclick="generateCode()" plain="true" >生成代码</a> 
 					</td>
 				</tr>
 			</table>
 		</div>
-		<div id="doc_grid" class="mini-datagrid" style="height:500px;" url="/IBSWAR122/miniuiSearch"  allowCellEdit="true" allowCellSelect="true" multiSelect="true" 
-        editNextOnEnterKey="true"  editNextRowCell="true">
+		<div id="doc_grid" class="mini-datagrid" style="height:450px;" allowResize="true" url="/miniCodegen/miniuiSearch"  allowCellEdit="true" allowCellSelect="true" multiSelect="true" 
+        editNextOnEnterKey="true"  editNextRowCell="true" showPager="false">
 			<div property="columns">
 				<div type="indexcolumn" headerAlign="center">#</div>
 				<div type="checkcolumn" ></div>
@@ -73,36 +74,85 @@
       		 	<div name="convert"  field="convert" headerAlign="center" allowSort="true" width="150" >转换器
                 	<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
            		 </div>
+           		<div header="系统选项">
+	                <div property="columns">
+	                	<div name="sysOption.field"  field="sysOption.field" headerAlign="center" width="100" >选项key
+                			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 		</div>
+           		 		<div name="sysOption.keyword"  field="sysOption.keyword" headerAlign="center"  width="200" >选项值
+                			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 		</div>
+           		 		<div type="comboboxcolumn" autoShowPopup="true" name="sysOption.scope" field="sysOption.scope"  width="100" headerAlign="center">范围
+	                		<input property="editor" class="mini-combobox" style="width:100%;" data="Comp" />                
+	             		</div>
+	                </div>
+            	</div>
+            	<div header="Hov选项">
+	                <div property="columns">
+	                	<div name="hovOption.field"  field="hovOption.field" headerAlign="center" allowSort="true" width="100" >hov字段名
+                			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 		</div>
+           		 		<div name="hovOption.url"  field="hovOption.url" headerAlign="center" allowSort="true" width="200" >hov地址
+                			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 		</div>
+           		 		<div name="hovOption.scope"  field="hovOption.scope" headerAlign="center" allowSort="true" width="200" >hov范围
+                			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 		</div>
+           		 		<div field="hovOption.hovMapping" width="120" headerAlign="center" name="hovOption.hovMapping" displayField="hovOption.hovMapping">下拉默认回填
+							<input property="editor" class="mini-buttonedit" onbuttonclick="onHowMapping"/>
+						</div>
+						<div type="checkboxcolumn" field="hovOption.autoComplete" trueValue="1" falseValue="0" width="200" headerAlign="center">hov是否为下拉形式</div>
+	                	<div name="hovOption.searchUrl"  field="hovOption.searchUrl" headerAlign="center" allowSort="true" width="200" >hov下拉查询地址
+                			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+           		 		</div>
+           		 		<div field="hovOption.dropDown" id="dropDown" width="120" headerAlign="center" displayField="hovOption.dropDown" name="hovOption.dropDown">下拉显示
+							<input property="editor" class="mini-buttonedit" onbuttonclick="onDropDown"/>
+						</div>
+	                </div>
+            	</div>
 			</div>
 		</div>
 		<div class="mini-toolbar" style="border-bottom: 0; padding: 0px;padding-top:10px;padding-bottom:5px;">
 			<table style="width: 100%;">
 				<tr>
 					<td style="width: 100%;">
-					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="addDtlRow" onclick="addSysRow()">新增系统选项</a> 
-					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="removeDtlRow" onclick="addCustomRow()">新增自定义选项</a>
+					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="addSysButton" onclick="addSysButton()">新增按钮</a> 
+					<!-- <a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="removeDtlRow" onclick="addCustomRow()">新增自定义选项</a>
 					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="removeDtlRow" onclick="addHovRow()">新增Hov选项</a>
-					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-remove" id="removeDtlRow" onclick="removeDtlRow()">删除</a>
+					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-remove" id="removeDtlRow" onclick="removeDtlRow()">删除</a> -->
 					</td>
 				</tr>
 			</table>
 		</div>
-		<div id="dtl_grid" class="mini-datagrid" style="height:300px;" url="/IBSWAR122/miniuiDtlSearch" idField="id" showPager="false" allowResize="true" multiSelect="true">
-			<div property="columns">
+		<div id="dtl_grid" class="mini-datagrid"  url="/IBSWAR122/miniuiDtlSearch" showColumnsMenu="true" style="height:80px;" idField="id" showPager="false" allowResize="true" multiSelect="true">
+			<!-- <div property="columns">
 				<div type="indexcolumn" headerAlign="center">#</div>
 				<div type="checkcolumn" field="checkcolumn"></div>
 				<div field="goods_code" headerAlign="center" allowSort="true" width="130px">控件类型</div>
 				<div field="goods_name" headerAlign="center" allowSort="true">区域</div>
 				
-			</div>
+			</div> -->
 		</div>
 	</div>
 	<script th:inline="javascript">
 	//<![CDATA[
 	//状态下拉选项
 	mini.parse();
+// 	function getData(){
+// 		var data = window.parent.parent.getData();
+//     	return data;
+// 	}
 	var doc_grid = mini.get("doc_grid");
     var dtl_grid = mini.get("dtl_grid");
+	var	getData = mini.decode(window.parent.parent.getData());
+	console.info(getData);
+    if(!isNull(getData[0].entityName)){
+	    doc_grid.load({entityName:getData[0].entityName,sql:getData[0].baseSql},function(e){
+	    	var columnsTemp = mini.decode(e.result.codegenTableColumn);
+	    	dtl_grid.set(columnsTemp);
+	    });
+    }
+    
 	     function addRow() {          
             var newRow = { name: "New Row" };
             doc_grid.addRow(newRow, 0);
@@ -131,9 +181,25 @@
                         { id: "text", text: '文本'},
                         { id: "hov", text: 'hov'}
          ];
-        
-        function addSysRow(){
-        	mini.alert("addSysRow");
+        //新增按钮
+        function addSysButton(){
+             mini.open({
+                 url: "/miniCodegen/addButton",
+                 title: "新增按钮列表",
+                 width: 600,
+                 height: 350,
+                 ondestroy: function (action) {
+                     if (action == "ok") {
+                         var iframe = this.getIFrameEl();
+                         var data = iframe.contentWindow.GetData();
+                         data = mini.clone(data);    //必须
+                         if (data) {
+                        	var sysButton = {"sysButton":data};
+                        	prop.push(sysButton);
+                         }
+                     }
+                 }
+             });
         }
         function addCustomRow(){
         	mini.alert("addCustomRow");
@@ -153,6 +219,118 @@
         	var data = window.parent.parent.getData();
         	alert(data);
     	}
+        
+        //hov下拉
+        function onHowMapping(e) {
+       	 var row = doc_grid.getSelected();
+            mini.open({
+                url: "/miniCodegen/hovMapping",
+                title: "默认hov回填值列表",
+                width: 600,
+                height: 350,
+                ondestroy: function (action) {
+                    if (action == "ok") {
+                        var iframe = this.getIFrameEl();
+                        var data = iframe.contentWindow.GetData();
+                        data = mini.clone(data);    //必须
+                        if (data) {
+                        	var howMappingName = row.name;
+                        	var howMappingTemp = {howMappingName:data,"flag":"howMapping"};
+                        	prop.push(howMappingTemp);
+                        	doc_grid.updateRow( row, {"hovOption.hovMapping":data[0].form});
+                        	doc_grid.cancelEdit();
+                        }
+                    }
+
+                }
+            });
+        }
+        
+        function onDropDown(e) {
+       	 var row = doc_grid.getSelected();
+            mini.open({
+                url: "/miniCodegen/dropDown",
+                title: "hov下拉显示列表",
+                width: 600,
+                height: 350,
+//                 onload: function () {       //弹出页面加载完成
+//                     var iframe = this.getIFrameEl(); 
+//                     var data = {action:"ok",key:row.name};       
+//                     //调用弹出页面方法进行初始化
+//                     iframe.contentWindow.SetData(data); 
+                                    
+//                 },
+                ondestroy: function (action) {
+                    if (action == "ok") {
+                        var iframe = this.getIFrameEl();
+                        var data = iframe.contentWindow.GetData();
+                        data = mini.clone(data);    //必须
+                        if (data) {
+                        	var dropDownName = row.name;
+                        	var dropDownTemp = {dropDownName:data,"flag":"dropDown"};
+                        	prop.push(dropDownTemp);
+                        	doc_grid.updateRow( row, {"hovOption.dropDown":data[0].name});
+                        	doc_grid.cancelEdit();
+                        }
+                    }
+
+                }
+            });
+        }
+        
+        
+        
+        var prop = [];
+        function generateCode(){
+        	debugger;
+        	doc_grid.selectAll();
+        	var docdata = doc_grid.getSelecteds();
+        	var tableColumns = getTableColumns(dtl_grid);
+        	var docjson = mini.encode(docdata);
+//         	console.info("dtljson: "+docjson);
+//         	console.info("tableColumns: "+tableColumns);
+        	$.ajax({
+                type: "POST",
+                url:"/miniCodegen/generateCode" ,
+                data: {"docJson":docjson,"prop":mini.encode(prop),"tableColumns":mini.encode(tableColumns)},
+                success: function(AjaxMsg) {
+                	if(AjaxMsg.ok){
+                		mini.alert("代码生成成功!");
+                	}else{
+                		mini.alert("代码生成失败:"+AjaxMsg.msg);
+                	}
+                }, error: function(error) {
+                	bootbox.alert(error);
+                }
+            });
+        }
+    	
+    	function getTableColumns(tableGrid){
+    		//获取表列
+    	    var columns = tableGrid.columns;
+    	    function getColumns(columns) {
+    	        var cols = [];
+    	        for (var i = 0; i < columns.length; i++) {
+    	            var column = columns[i];
+    	            if(column.visible){
+	    	            var col = { header: column.header, field: column.field};
+	    	            if (column.columns) {
+	    	                col.columns = getColumns(column.columns);
+	    	            }
+	    	            cols.push(col);
+    	            }
+    	        }
+    	        return cols;
+    	    }
+    	    var columns = getColumns(columns);
+    	    return columns;
+    	}
+        function isNull(a) {
+		    if (a == null || a == undefined || (typeof a == 'string' && a == '')) {
+		        return true;
+		    }
+		    return false;
+		}
       //]]> 	
     </script>
 
