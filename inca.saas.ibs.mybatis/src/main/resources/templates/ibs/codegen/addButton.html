@@ -42,9 +42,9 @@
                 <div name="onClick" field="onClick" headerAlign="center" width="150">onClick
 					<input property="editor" class="mini-textbox" style="width: 100%;" />
 				</div>
-				<div field="scope" name="scope" width="100" headerAlign="center">范围
-					<input property="editor" class="mini-textbox" style="width: 100%;" />
-				</div> 
+				<div type="comboboxcolumn" autoShowPopup="true" name="scope" field="scope"  width="200" headerAlign="center">范围
+	                <input property="editor" class="mini-combobox" style="width:100%;" data="Scope" />                
+	            </div>
             </div>
         </div>
     
@@ -60,44 +60,14 @@
     mini.parse();
     var grid = mini.get("datagrid");
 
-    ////////////////////////////////////////////////////////////////////////////////
-
-    grid.on("load", function (e) {
-
-        if (firstLoad) {
-            firstLoad = false;
-            if (initIds) {
-                selectRowsByIds(initIds);
-            }
-        }
-    });
-
-    var firstLoad = true;
-    var initIds;                   //存放初始数据id，这个作为选中数据。
-
-    function selectRowsByIds(ids) {
-        if (ids) {
-            var rows = [];
-            for (var i = 0, l = ids.length; i < l; i++) {
-                var o = grid.getRow(ids[i]);
-                if (o) rows.push(o);
-            }
-            grid.selects(rows);
+    function SetData(data) {
+    	if (data.action == "ok") {
+            //跨页面传递的数据对象，克隆后才可以安全使用
+            var data = mini.clone(data);
+            grid.setData(data.buttonData);
         }
     }
 
-    function SetData(ids) {
-
-        if (typeof ids == "string") {
-            ids = ids.split(",");     //"1,2" => [1, 2]
-        }
-        initIds = ids;
-    }
-
-    function GetSelecteds() {
-        var rows = grid.getSelecteds();
-        return rows;
-    }
     function GetData() {
     	grid.selectAll();
         var rows =grid.getSelecteds();
@@ -136,18 +106,17 @@
          }
      }
    	function addRow() {   
-        var newRow = { name: "NewRow"};
-        grid.addRow(newRow, 0);
+        var newRow = { name: ""};
+        grid.addRow(newRow, grid.length + 1);
         grid.beginEditCell(newRow);
     }
    	
-// 	grid.on("celleditenter", function (e) {
-//         var index = grid.indexOf(e.record);
-//         if (index == grid.getData().length - 1) {
-//             var row = {};
-//             grid.addRow(row);
-//         }
-//     });
+    var Scope = [
+                 { id: "表格,表单", text: '表格,表单' },
+                 { id: "表格", text: '表格'},
+                 { id: "表单", text: '表单'}
+     ];
+   	
     //]]> 	
     </script>
 </body>

@@ -19,7 +19,7 @@ public class TestVelocity {
 
 		ve.init();
 
-		Template t = ve.getTemplate("com/inca/saas/ibs/demo/TestVelocity.vm");
+		Template t = ve.getTemplate("com/inca/saas/ibs/vms/controller.vm");
 		VelocityContext ctx = new VelocityContext();
 
 		ctx.put("name", "velocity");

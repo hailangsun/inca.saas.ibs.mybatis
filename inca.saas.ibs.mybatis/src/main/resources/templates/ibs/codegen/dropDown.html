@@ -56,50 +56,12 @@
 	//<![CDATA[
     mini.parse();
     var grid = mini.get("datagrid");
-
-    ////////////////////////////////////////////////////////////////////////////////
-
-    grid.on("load", function (e) {
-
-        if (firstLoad) {
-            firstLoad = false;
-            if (initIds) {
-                selectRowsByIds(initIds);
-            }
+    function SetData(data) {
+ 		if (data.action == "ok") {
+            //跨页面传递的数据对象，克隆后才可以安全使用
+            var data = mini.clone(data);
+            grid.setData(data.dropDownData.howDropDownData);
         }
-    });
-
-    var firstLoad = true;
-    var initIds;                   //存放初始数据id，这个作为选中数据。
-
-    function selectRowsByIds(ids) {
-        if (ids) {
-            var rows = [];
-            for (var i = 0, l = ids.length; i < l; i++) {
-                var o = grid.getRow(ids[i]);
-                if (o) rows.push(o);
-            }
-            grid.selects(rows);
-        }
-    }
-
-//     function SetData(data) {
-	debugger;
-//         if (typeof ids == "string") {
-//             ids = ids.split(",");     //"1,2" => [1, 2]
-//         }
-//         initIds = ids;
-
-//  		if (data.action == "ok") {
-//             //跨页面传递的数据对象，克隆后才可以安全使用
-//             var data = mini.clone(data);
-          
-//         }
-//     }
-
-    function GetSelecteds() {
-        var rows = grid.getSelecteds();
-        return rows;
     }
     function GetData() {
     	grid.selectAll();
@@ -137,18 +99,11 @@
          }
      }
    	function addRow() {   
-        var newRow = { name: "NewRow"};
-        grid.addRow(newRow, 0);
+        var newRow = { name: ""};
+        grid.addRow(newRow, grid.length+1);
         grid.beginEditCell(newRow);
     }
    	
-// 	grid.on("celleditenter", function (e) {
-//         var index = grid.indexOf(e.record);
-//         if (index == grid.getData().length - 1) {
-//             var row = {};
-//             grid.addRow(row);
-//         }
-//     });
     //]]> 	
     </script>
 </body>

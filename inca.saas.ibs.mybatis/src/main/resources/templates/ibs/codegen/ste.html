@@ -68,26 +68,18 @@ h4
 <div class="parent-page"> 
 	<form id="steForm" style="text-align: center;" action="/miniCodegen/design">
 	    <table>
+	    	<tr>
+	            <td><label>名称：</label></td>
+	            <td>
+	                <input name="className" style="width:378px;" class="mini-textbox" required="true"/>
+	            </td>
+	        </tr>  
 	     	<tr>
 	            <td><label>实体路径：</label></td>
 	            <td>
-	                <input name="entityName" style="width:378px;" class="mini-textbox" required="true"/>
+	                <input name="entityName" style="width:378px;" class="mini-textbox" value="com.inca.saas.ibs.entity.Goods" required="true"/>
 	            </td>
 	        </tr>       
-	       <!--  <tr>
-	            <td><label>包路径：</label></td>
-	            <td>
-	                <input name="packageName" vtype="email" class="mini-textbox" required="true" />
-	                
-	            </td>    
-	        </tr>
-	        <tr>
-	            <td><label>实体：</label></td>
-	            <td>
-	                <input name="entityName" class="mini-textbox" vtype="minLength:5" required="true"/>
-	
-	            </td>
-	        </tr>  -->
 	        <tr>
 	           	<td >SQL：</td>
 	               <td colspan="3">    
@@ -120,31 +112,25 @@ h4
 //         });
 
        function doDesign(){
-    	   debugger;
-//     	   $(".parent-page").hide();
-//     	   $("#iframeDiv").show();
-    	   
-    	   
-//     	 	if($("#iframeDiv").length == 0){
-    			var dialog = $('<div id="iframeDiv" style="margin:0;"><iframe id="miniuiFrame" style="width: 100%;height:800px;border:none;"/></div>');
-    			$("body").append(dialog);
-    			var url="/miniCodegen/design?pattern=1";
-    			$("#miniuiFrame").attr("src",url);
-    			$(".parent-page").hide();
-    			$("#iframeDiv").show();
-//     		}
+   			var dialog = $('<div id="iframeDiv" style="margin:0;"><iframe id="miniuiFrame" style="width: 100%;height:800px;border:none;"/></div>');
+   			$("body").append(dialog);
+   			var url="/miniCodegen/design?pattern=1";
+   			$("#miniuiFrame").attr("src",url);
+   			$(".parent-page").hide();
+   			$("#iframeDiv").show();
        }
        function onShow(){
     	   $(".parent-page").show();
     	   $("#iframeDiv").hide();
        }
+       
        function getData(){
-//     	   var data = $("#steform").serialize();
     	   var steForm 	= new mini.Form("steForm");
     	   var steFormData = steForm.getData();            
            var steFormJson = mini.encode([steFormData]);
     	   return steFormJson;
        }
+       
     </script>
     
 

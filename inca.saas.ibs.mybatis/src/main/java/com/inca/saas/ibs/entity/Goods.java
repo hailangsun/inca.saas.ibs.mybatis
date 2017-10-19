@@ -1,5 +1,6 @@
 package com.inca.saas.ibs.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -155,6 +156,10 @@ public class Goods {
 	@Title("一般养护天数")
 	@Column(name = "conserve_days", precision = 5)
 	private Integer conserveDays;
+	
+	@Title("税率")
+	@Column(name = "tax_rate", precision = 16, scale = 6)
+	private BigDecimal taxRate;
 
 	public String getGoodsCode() {
 		return goodsCode;
@@ -436,6 +441,15 @@ public class Goods {
 		this.conserveDays = conserveDays;
 	}
 
+	public BigDecimal getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(BigDecimal taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	
 	
 	
 }

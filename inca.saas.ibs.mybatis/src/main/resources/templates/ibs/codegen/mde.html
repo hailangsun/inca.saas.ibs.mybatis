@@ -68,10 +68,16 @@ h4
 <div class="parent-page"> 
 	<form id="mdeForm" style="text-align: center;" action="/miniCodegen/design">
 	    <table>
+	    	<tr>
+	            <td><label>名称：</label></td>
+	            <td>
+	                <input name="className" style="width:378px;" class="mini-textbox" required="true"/>
+	            </td>
+	        </tr>      
 	     	<tr>
 	            <td><label>总单实体路径：</label></td>
 	            <td>
-	                <input name="entityName" style="width:378px;" class="mini-textbox" required="true"/>
+	                <input name="docEntityName" style="width:378px;" class="mini-textbox" required="true"/>
 	            </td>
 	        </tr>       
 	      	<tr>
@@ -81,17 +87,19 @@ h4
 	            </td>
 	        </tr>    
 	        <tr>
-	           	<td >SQL：</td>
+	           	<td >docSQL：</td>
 	               <td colspan="3">    
-	                   <input name="baseSql" class="mini-textarea" style="width:378px;height: 300px" />
+	                   <input name="docBaseSql" class="mini-textarea" style="width:378px;height: 300px" />
+	             </td>
+	             <td >dtlSQL：</td>
+	               <td colspan="3">    
+	                   <input name="dtlBaseSql" class="mini-textarea" style="width:378px;height: 300px" />
 	             </td>
 	        </tr>
 	        <tr>
 	            <td></td>
 	            <td>
-	                <button type="button" onclick="docMde()">设计总单细目表</button>
-	                
-	                 <button type="button" onclick="dtlMde()">设计细单细目表</button>
+	                <button type="button" onclick="mde()">总单细目设计表</button>
 	            </td>
 	        </tr>
 	    </table>
@@ -99,24 +107,13 @@ h4
 </div>
     <script type="text/javascript">
         
-       function docMde(){
-    	   debugger;
-   			var docDialog = $('<div id="docIframeDiv" style="margin:0;"><iframe id="miniuiDocFrame" style="width: 100%;height:800px;border:none;"/></div>');
+       function mde(){
+   			var docDialog = $('<div id="mdeIframeDiv" style="margin:0;"><iframe id="miniuiMdeFrame" style="width: 100%;height:800px;border:none;"/></div>');
    			$("body").append(docDialog);
-   			var url="/miniCodegen/design?pattern=2";
-   			$("#miniuiDocFrame").attr("src",url);
+   			var url="/miniCodegen/mdeDesign";
+   			$("#miniuiMdeFrame").attr("src",url);
    			$(".parent-page").hide();
-   			$("#docIframeDiv").show();
-       }
-       
-       function dtlMde(){
-    	   debugger;
-   			var dtlDialog = $('<div id="dtlIframeDiv" style="margin:0;"><iframe id="miniuiDtlFrame" style="width: 100%;height:800px;border:none;"/></div>');
-   			$("body").append(dtlDialog);
-   			var url="/miniCodegen/design?pattern=3";
-   			$("#miniuiDtlFrame").attr("src",url);
-   			$(".parent-page").hide();
-   			$("#dtlIframeDiv").show();
+   			$("#mdeIframeDiv").show();
        }
        
        function onShow(){

@@ -1,9 +1,7 @@
 package com.inca.saas.ibs.codegen;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.inca.saas.ibs.codegen.EntityPropertis.SysOption;
 import com.inca.saas.ibs.common.Option;
 import com.inca.saas.ibs.common.Title;
@@ -62,33 +62,37 @@ public class CodegenController {
 		return "ibs/codegen/mde";
 	}
 	/**
-	 * 设计页面（含页签）
+	 * 总单设计页面（含页签）
+	 * @param model
+	 * @param codeGen
+	 * @return
+	 */
+	@RequestMapping({"/mdeDesign"})
+	public String mdeDesign(Model model){
+		return "ibs/codegen/mdeDesign";
+	}
+	
+	/**
+	 * 单表设计页面（含页签）
 	 * @param model
 	 * @param codeGen
 	 * @return
 	 */
 	@RequestMapping({"/design"})
-	public String tabs(Model model,@RequestParam String pattern){
-		String patternName="";
-		if("1".equals(pattern)){
-			patternName="单表";
-		}else if("2".equals(pattern)){
-			patternName="总单";
-		}else if("3".equals(pattern)){
-			patternName="细单";
-		}
-		model.addAttribute("patternName", patternName);
+	public String tabs(Model model){
 		return "ibs/codegen/design";
 	}
 	
 	/**
 	 * 表单设计子页面
+	 * @param formStatus 1是总单 2是细单
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping({"/form"})
-	public String form(Model model){
+	public String form(Model model,@RequestParam String formStatus){
 		//获取实体，根据实体生成，表数据
+		model.addAttribute("formStatus",formStatus);
 		return "ibs/codegen/form";
 	}
 	/**
@@ -99,6 +103,37 @@ public class CodegenController {
 	@RequestMapping({"/table"})
 	public String table(Model model){
 		return "ibs/codegen/table";
+	}
+	
+	//数据库类型
+	private String getClassType(String type){
+		if("class java.lang.String".equals(type)){
+			return "java.lang.String";
+		}else if("class java.lang.Integer".equals(type)){
+			return "java.lang.Integer";
+		}else if("class java.lang.Boolean".equals(type)){
+			return "java.lang.Boolean";
+		}else if("class java.util.Date".equals(type)){
+			return "java.util.Date";
+		}else if("class java.math.BigDecimal".equals(type)){
+			return "java.math.BigDecimal";
+		}
+		return null;
+	}
+	//miniui控件类型
+	private String getMiniCompsType(String type){
+		if("class java.lang.String".equals(type)){
+			return "text";
+		}else if("class java.lang.Integer".equals(type)){
+			return "java.lang.Integer";
+		}else if("class java.lang.Boolean".equals(type)){
+			return "java.lang.Boolean";
+		}else if("class java.util.Date".equals(type)){
+			return "java.util.Date";
+		}else if("class java.math.BigDecimal".equals(type)){
+			return "java.math.BigDecimal";
+		}
+		return null;
 	}
 	
 	
@@ -120,7 +155,9 @@ public class CodegenController {
 				Option option = f.getAnnotation(Option.class);
 				entityPropertis.title(title.value());
 				entityPropertis.name(column.name());
-				entityPropertis.metaType(f.getType()+"");
+				String classType = getClassType(f.getType()+"");
+				entityPropertis.metaType(classType);//设置类型
+//				entityPropertis.comp(classType);//控件类型
 				if(option != null){
 					entityPropertis.sysOption(new SysOption().field(column.name()).keyword(option.name()));
 				}
@@ -167,14 +204,15 @@ public class CodegenController {
 	
 	//代码生成
 	/**
-	 * @param docJson 代码生成的基本属性信息
-	 * @param prop 下拉hov、按钮信息
-	 * @param tableColumns 显示列信息
+	 * @param currentData 单表
+	 * @param dtlData 细单
+	 * @param docData 总单
+	 * @param getData 名称、路径、sql
 	 * @return
 	 */
 	@RequestMapping({"/generateCode"})
 	@ResponseBody
-	public AjaxMsg generateCode(String docJson,String prop,String tableColumns){
+	public AjaxMsg generateCode(String currentData,String dtlData,String docData,String getData,String type){
 		
 		Document doc = DocumentHelper.createDocument();
         //增加根节点
@@ -186,49 +224,133 @@ public class CodegenController {
         Element table = model.addElement("table");
         Element comps = model.addElement("comps");
         Element buttons = model.addElement("buttons");
-        
-        //添加基本元素
-        for (int i = 0; i < 5; i++) {
-        	 Element field = form.addElement("field");
-        	 field.addAttribute("name", "id"+i);
-        	 field.addAttribute("title", "单据ID"+i);
-        	 field.addAttribute("metaType", "java.lang.Integer"+i);
-        	 field.addAttribute("width", "150px");
-        	 field.addAttribute("hidden", "true");
+		
+		JSONObject currentDataObject = JSONObject.parseObject(currentData);
+		
+//		JSONObject dtlDataObject = JSONObject.parseObject(dtlData);
+//		JSONObject docDataObject = JSONObject.parseObject(docData);
+		
+		
+		String data = currentDataObject.getString("dataJson");//总数
+		String prop = currentDataObject.getString("prop");//hov、下拉显示、状态等
+		String tableColumns = currentDataObject.getString("tableColumns");//显示列
+		
+		JSONArray jsonArray = JSONArray.parseArray(data);
+		JSONArray jsonTableColumnsArray = JSONArray.parseArray(tableColumns);
+		JSONArray propAll = JSONArray.parseArray(prop);
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject dataJ = jsonArray.getJSONObject(i);
+			 //添加基本元素
+	    	 Element field = form.addElement("field");
+	    	 field.addAttribute("name", dataJ.getString("name"));
+	    	 field.addAttribute("title", dataJ.getString("title"));
+	    	 field.addAttribute("metaType", dataJ.getString("metaType"));
+	    	 field.addAttribute("width", "150px");
+	    	 field.addAttribute("hidden", dataJ.getString("hidden"));
+	    	 field.addAttribute("comp", dataJ.getString("comp"));
+	    	 field.addAttribute("dbCol", dataJ.getString("dbCol"));
+	    	 field.addAttribute("readOnly", dataJ.getString("readOnly"));
+	    	 field.addAttribute("advQuery", dataJ.getString("advQuery"));
+	    	 field.addAttribute("query", dataJ.getString("query"));
+	    	 field.addAttribute("required", dataJ.getString("required"));
+	    	 field.addAttribute("keyword", dataJ.getString("keyword"));
+	    	 field.addAttribute("virtual", dataJ.getString("virtual"));
+	    	 field.addAttribute("convert", dataJ.getString("convert"));
+	    	 String sysOptionStr = dataJ.getString("sysOption");
+	    	 if(!"".equals(sysOptionStr) && sysOptionStr != null){
+	    		 JSONObject sysOption =  JSONObject.parseObject(sysOptionStr);
+	    		 //系统下拉选项
+	    		 if(!"".equals(sysOption.getString("field")) && sysOption.getString("field") != null){
+	    			 Element combobox = comps.addElement("combobox");
+	    			 combobox.addAttribute("field", sysOption.getString("field"));
+	    			 combobox.addAttribute("keyword", sysOption.getString("keyword"));
+	    		 }
+	    	 }
+		}
+		
+		//hov循环
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject dataJ = jsonArray.getJSONObject(i);
+			String hovOptionStr = dataJ.getString("hovOption");
+		 	 //是否为hov
+	    	 if(dataJ.getString("isHov") != null && "true".equals(dataJ.getString("isHov"))){
+	    		 if(!"".equals(hovOptionStr) && hovOptionStr != null){
+	    			 JSONObject hovOption =  JSONObject.parseObject(hovOptionStr);
+	    			 Element hov = comps.addElement("hov");
+	    			 hov.addAttribute("field", dataJ.getString("name"));
+	    			 hov.addAttribute("url", hovOption.getString("url"));
+	    			 hov.addAttribute("scope", hovOption.getString("scope"));
+	    			 
+	    			 //遍历hovMapping属性回填
+	   				for (int j = 0; j < propAll.size(); j++) {
+	   					JSONObject propJ = propAll.getJSONObject(j);
+	   					if(propJ.get("field") != null && propJ.get("field").equals(dataJ.getString("name"))){
+	   						if("howMapping".equals(propJ.get("flag"))){
+	   							JSONArray howMappingArray = JSONArray.parseArray(propJ.get("howMappingData")+"");
+	   							for (int k = 0; k < howMappingArray.size(); k++) {
+	   									JSONObject 	howMappingJ = howMappingArray.getJSONObject(k);
+								 	    	Element hovMapping = hov.addElement("hovMapping");
+								 	    	hovMapping.addAttribute("from", howMappingJ.getString("from"));
+								 	    	hovMapping.addAttribute("to", howMappingJ.getString("to"));
+									}
+	   						}
+	   					}
+	   				}
+	    			 
+	    			 if(hovOption.getString("autoComplete") != null && "true".equals(hovOption.getString("autoComplete"))){
+	    				 hov.addAttribute("autoComplete", hovOption.getString("autoComplete"));
+	    				 hov.addAttribute("searchUrl", hovOption.getString("searchUrl"));
+	    				 //遍历hov下拉显示
+	    				 for (int j = 0; j < propAll.size(); j++) {
+	    					 JSONObject propJ = propAll.getJSONObject(j);
+	    					 if(propJ.get("field") != null && propJ.get("field").equals(dataJ.getString("name"))){
+	    						 if("dropDown".equals(propJ.get("flag"))){
+	    							 JSONArray howMappingArray = JSONArray.parseArray(propJ.get("howDropDownData")+"");
+	    							 for (int k = 0; k < howMappingArray.size(); k++) {
+	    								 JSONObject 	howMappingJ = howMappingArray.getJSONObject(k);
+	    								 Element hovMapping = hov.addElement("field");
+	    								 hovMapping.addAttribute("name", howMappingJ.getString("name"));
+	    								 hovMapping.addAttribute("title", howMappingJ.getString("title"));
+	    							 }
+	    						 }
+	    					 }
+	    				 }
+	    			 }
+	    			
+   				
+	    		 }
+	    	 }
+		}
+		
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < jsonTableColumnsArray.size(); i++) {
+			JSONObject columnsJ = jsonTableColumnsArray.getJSONObject(i);
+			sb.append(columnsJ.get("field")+",");
 		}
         //添加显示
-        table.setText("goods_code,goods_incode,goods_name");
+        table.setText(sb.substring(0, sb.length()-1));
        
-        //添加下拉选项
-	    for (int i = 0; i < 2; i++) {
-	    	 Element combobox = comps.addElement("combobox");
-	    	 combobox.addAttribute("field", "come_from"+i);
-	    	 combobox.addAttribute("keyword", "IBS_DOCUMENT_COME_FROM"+i);
-	    }
-	    
-	    //添加hov
-	    for (int i = 0; i < 3; i++) {
-	    	Element hov = comps.addElement("hov");
-	    	hov.addAttribute("field", "supply_name"+i);
-	    	hov.addAttribute("url", "/hov/IBSPUB008/table/miniuihome/miniuiHovSearch"+i);
-	    	hov.addAttribute("scope", "表格,表单,查询,高级查询");
-	    	Element hovMapping = hov.addElement("hovMapping");
-	    	hovMapping.addAttribute("from", "id"+i);
-	    	hovMapping.addAttribute("to", "supply_id"+i);
-		}
-	    
 	    //添加按钮
-	    for (int i = 0; i < 3; i++) {
-	    	Element button = buttons.addElement("button");
-	    	button.addAttribute("onClick", "dtlDoStop"+i);
-	    	button.addText("终止"+i);
+        for (int i = 0; i < propAll.size(); i++) {
+			JSONObject propJ = propAll.getJSONObject(i);
+			if(!"".equals(propJ.get("sysButton")) && propJ.get("sysButton") != null){
+				JSONArray buttonArray = JSONArray.parseArray(propJ.get("sysButton")+"");
+				for (int k = 0; k < buttonArray.size(); k++) {
+					JSONObject 	buttonJ = buttonArray.getJSONObject(k);
+					Element button = buttons.addElement("button");
+					button.addAttribute("onClick", buttonJ.getString("onClick"));
+					button.addAttribute("scope", buttonJ.getString("scope"));
+					button.addText(buttonJ.getString("clickName"));
+				}
+			}
 		}
+        
         //实例化输出格式对象
         OutputFormat format = OutputFormat.createPrettyPrint();
         //设置输出编码
         format.setEncoding("UTF-8");
         //创建需要写入的File对象
-        File file = new File("H:" + File.separator + "dtlModel.xml");
+        File file = new File("E:" + File.separator + "dtlModel.xml");
         //生成XMLWriter对象，构造函数中的参数为需要输出的文件流和格式
         XMLWriter writer;
 		try {

@@ -17,7 +17,7 @@ public class EntityPropertis {
 	private String required = "false";//必填
 	private String keyword = "false";//关键字过滤
 	private String virtual ="false";//虚拟列
-	private String convert = "false";//转换器
+	private String convert;//转换器
 	
 	public String getTitle() {
 		return title;
@@ -225,7 +225,7 @@ public class EntityPropertis {
 	public static class SysOption implements Serializable{
 		private String field;
 		private String keyword;
-		private String scope;
+		private String scope = "1";
 		public String getField() {
 			return field;
 		}
@@ -270,6 +270,7 @@ public class EntityPropertis {
 		private String autoComplete = "false";
 		private String hovMapping;//从hov中自动回填有哪些值
 		private String dropDown;//下拉显示列名称
+		private String isHov = "false";
 		
 		
 		public String getField() {
@@ -354,25 +355,31 @@ public class EntityPropertis {
 		public HovOption dropDown(String dropDown){
 			return setDropDown(dropDown);
 		}
+		public String getIsHov() {
+			return isHov;
+		}
+		public void setIsHov(String isHov) {
+			this.isHov = isHov;
+		}
 		
 		
 	}
 	public static class HovBackfill implements Serializable{
-		private String form;
+		private String from;
 		private String to;
 		private String name;
 		private String title;
 		
-		public String getForm() {
-			return form;
+		public String getFrom() {
+			return from;
 		}
-		public HovBackfill setForm(String form) {
-			this.form = form;
+		public HovBackfill setFrom(String from) {
+			this.from = from;
 			return this;
 		}
 		
-		public HovBackfill form(String form){
-			return setForm(form);
+		public HovBackfill from(String from){
+			return setFrom(from);
 		}
 		
 		public String getTo() {

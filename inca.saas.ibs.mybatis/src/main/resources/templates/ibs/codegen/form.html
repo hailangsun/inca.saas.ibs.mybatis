@@ -44,10 +44,10 @@
 			</table>
 		</div>
 		<div id="doc_grid" class="mini-datagrid" style="height:450px;" allowResize="true" url="/miniCodegen/miniuiSearch"  allowCellEdit="true" allowCellSelect="true" multiSelect="true" 
-        editNextOnEnterKey="true"  editNextRowCell="true" showPager="false">
+        editNextOnEnterKey="true"  editNextRowCell="true" showPager="false" allowSortColumn="false" >
 			<div property="columns">
-				<div type="indexcolumn" headerAlign="center">#</div>
-				<div type="checkcolumn" ></div>
+				<div type="indexcolumn" width="60" headerAlign="center">#</div>
+				<div type="checkcolumn" width="60"></div>
 				 <div name="title"  field="title" headerAlign="center" allowSort="true" width="150" >标题
                 	<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
            		 </div>
@@ -57,51 +57,54 @@
 	             <div type="comboboxcolumn" autoShowPopup="true" name="metaType" field="metaType" width="100" allowSort="true"  align="center" headerAlign="center">字段类型
 	                <input property="editor" class="mini-combobox" style="width:100%;" data="MetaType" />                
 	             </div>
-	             <div type="comboboxcolumn" autoShowPopup="true" name="comp" field="comp" width="100" allowSort="true"  align="center" headerAlign="center">控件类型
-	                <input property="editor" class="mini-combobox" style="width:100%;" data="Comp" />                
-	             </div>
-				<div type="checkboxcolumn" field="dbCol" trueValue="1" falseValue="0" width="60" headerAlign="center">数据库字段</div>
+	             
+	              <div header="控件类型：属于表格卡片中属性">
+	                <div property="columns">
+           		 		 <div type="comboboxcolumn" autoShowPopup="true" name="comp" field="comp" width="200" allowSort="true"  align="center" headerAlign="center">控件类型
+	                		<input property="editor" class="mini-combobox" style="width:100%;" data="Comp" />                
+	             		</div>
+	                </div>
+            	</div>
+				<div type="checkboxcolumn" field="dbCol" trueValue="1" falseValue="0" width="150" headerAlign="center" >数据库字段</div>
 				<div name="width"  field="width" headerAlign="center" allowSort="true" width="150" >宽度
                 	<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
            		 </div>        
-      		 	<div type="checkboxcolumn" field="readOnly" trueValue="1" falseValue="0" width="60" headerAlign="center">是否只读</div>
-      		 	<div type="checkboxcolumn" field="hidden" trueValue="1" falseValue="0" width="60" headerAlign="center">是否隐藏</div>
-      		 	<div type="checkboxcolumn" field="advQuery" trueValue="1" falseValue="0" width="60" headerAlign="center">高级查询</div>
-      		 	<div type="checkboxcolumn" field="query" trueValue="1" falseValue="0" width="60" headerAlign="center">普通查询</div>
-      		 	<div type="checkboxcolumn" field="required" trueValue="1" falseValue="0" width="60" headerAlign="center">必填</div>
-      		 	<div type="checkboxcolumn" field="keyword" trueValue="1" falseValue="0" width="60" headerAlign="center">关键字过滤</div>
-      		 	<div type="checkboxcolumn" field="virtual" trueValue="1" falseValue="0" width="60" headerAlign="center">虚拟列</div>
+      		 	<div type="checkboxcolumn" field="readOnly" trueValue="true" falseValue="false" width="150" headerAlign="center">是否只读</div>
+      		 	<div type="checkboxcolumn" field="hidden" trueValue="true" falseValue="false" width="150" headerAlign="center">是否隐藏</div>
+      		 	<div type="checkboxcolumn" field="advQuery" trueValue="true" falseValue="false" width="150" headerAlign="center">高级查询</div>
+      		 	<div type="checkboxcolumn" field="query" trueValue="true" falseValue="false" width="150" headerAlign="center">普通查询</div>
+      		 	<div type="checkboxcolumn" field="required" trueValue="true" falseValue="false" width="150" headerAlign="center">必填</div>
+      		 	<div type="checkboxcolumn" field="keyword" trueValue="true" falseValue="false" width="150" headerAlign="center">关键字过滤</div>
+      		 	<div type="checkboxcolumn" field="virtual" trueValue="true" falseValue="false" width="150" headerAlign="center">虚拟列</div>
       		 	<div name="convert"  field="convert" headerAlign="center" allowSort="true" width="150" >转换器
                 	<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
            		 </div>
            		<div header="系统选项">
 	                <div property="columns">
-	                	<div name="sysOption.field"  field="sysOption.field" headerAlign="center" width="100" >选项key
-                			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
-           		 		</div>
            		 		<div name="sysOption.keyword"  field="sysOption.keyword" headerAlign="center"  width="200" >选项值
                 			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
            		 		</div>
-           		 		<div type="comboboxcolumn" autoShowPopup="true" name="sysOption.scope" field="sysOption.scope"  width="100" headerAlign="center">范围
-	                		<input property="editor" class="mini-combobox" style="width:100%;" data="Comp" />                
+           		 		<div type="comboboxcolumn" autoShowPopup="true" name="sysOption.scope" field="sysOption.scope"  width="200" headerAlign="center">范围
+	                		<input property="editor" class="mini-combobox" style="width:100%;" data="Scope" />                
 	             		</div>
 	                </div>
             	</div>
             	<div header="Hov选项">
 	                <div property="columns">
-	                	<div name="hovOption.field"  field="hovOption.field" headerAlign="center" allowSort="true" width="100" >hov字段名
+	                	<div type="checkboxcolumn" field="isHov" trueValue="true" falseValue="false" width="150" headerAlign="center">是否为hov</div>
+	                	<!-- <div name="hovOption.field"  field="hovOption.field" headerAlign="center" allowSort="true" width="100" >hov字段名
                 			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
-           		 		</div>
+           		 		</div> -->
            		 		<div name="hovOption.url"  field="hovOption.url" headerAlign="center" allowSort="true" width="200" >hov地址
                 			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
            		 		</div>
            		 		<div name="hovOption.scope"  field="hovOption.scope" headerAlign="center" allowSort="true" width="200" >hov范围
-                			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
+                			<input property="editor" class="mini-combobox" style="width:100%;" minWidth="200" data="Scope"/>
            		 		</div>
            		 		<div field="hovOption.hovMapping" width="120" headerAlign="center" name="hovOption.hovMapping" displayField="hovOption.hovMapping">下拉默认回填
 							<input property="editor" class="mini-buttonedit" onbuttonclick="onHowMapping"/>
 						</div>
-						<div type="checkboxcolumn" field="hovOption.autoComplete" trueValue="1" falseValue="0" width="200" headerAlign="center">hov是否为下拉形式</div>
+						<div type="checkboxcolumn" field="hovOption.autoComplete" trueValue="true" falseValue="false" width="200" headerAlign="center">hov是否为下拉形式</div>
 	                	<div name="hovOption.searchUrl"  field="hovOption.searchUrl" headerAlign="center" allowSort="true" width="200" >hov下拉查询地址
                 			<input property="editor" class="mini-textbox" style="width:100%;" minWidth="200" />
            		 		</div>
@@ -117,21 +120,11 @@
 				<tr>
 					<td style="width: 100%;">
 					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="addSysButton" onclick="addSysButton()">新增按钮</a> 
-					<!-- <a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="removeDtlRow" onclick="addCustomRow()">新增自定义选项</a>
-					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-add" id="removeDtlRow" onclick="addHovRow()">新增Hov选项</a>
-					<a class="mini-button mini-ibs-btn" plain="true" iconCls="icon-remove" id="removeDtlRow" onclick="removeDtlRow()">删除</a> -->
 					</td>
 				</tr>
 			</table>
 		</div>
 		<div id="dtl_grid" class="mini-datagrid"  url="/IBSWAR122/miniuiDtlSearch" showColumnsMenu="true" style="height:80px;" idField="id" showPager="false" allowResize="true" multiSelect="true">
-			<!-- <div property="columns">
-				<div type="indexcolumn" headerAlign="center">#</div>
-				<div type="checkcolumn" field="checkcolumn"></div>
-				<div field="goods_code" headerAlign="center" allowSort="true" width="130px">控件类型</div>
-				<div field="goods_name" headerAlign="center" allowSort="true">区域</div>
-				
-			</div> -->
 		</div>
 	</div>
 	<script th:inline="javascript">
@@ -144,28 +137,40 @@
 // 	}
 	var doc_grid = mini.get("doc_grid");
     var dtl_grid = mini.get("dtl_grid");
+    var formStatus = /*[[${formStatus}]]*/;
 	var	getData = mini.decode(window.parent.parent.getData());
-	console.info(getData);
-    if(!isNull(getData[0].entityName)){
-	    doc_grid.load({entityName:getData[0].entityName,sql:getData[0].baseSql},function(e){
+	if(formStatus == "0"){//单表
+	    if(!isNull(getData[0].entityName)){
+	    	getDataColumns(getData[0].entityName,getData[0].baseSql,getData[0].className);
+	    }
+	}else if(formStatus == "1"){//总单
+		if(!isNull(getData[0].docEntityName)){
+	    	getDataColumns(getData[0].docEntityName,getData[0].docBaseSql,getData[0].className);
+	    }
+	}else if(formStatus == "2"){//细单
+		if(!isNull(getData[0].dtlEntityName)){
+	    	getDataColumns(getData[0].dtlEntityName,getData[0].dtlBaseSql,getData[0].className);
+	    }
+	}
+	
+	function getDataColumns(name,baseSql,className){
+		doc_grid.load({entityName:name,sql:baseSql,className:className},function(e){
 	    	var columnsTemp = mini.decode(e.result.codegenTableColumn);
 	    	dtl_grid.set(columnsTemp);
 	    });
-    }
+	}
     
-	     function addRow() {          
-            var newRow = { name: "New Row" };
-            doc_grid.addRow(newRow, 0);
-
-            doc_grid.beginEditCell(newRow, "LoginName");
-        }
-        function removeRow() {
-            var rows = doc_grid.getSelecteds();
-            if (rows.length > 0) {
-            
-            	doc_grid.removeRows(rows, true);                
-            }
-        }
+	function addRow() {          
+       var newRow = { name: "" };
+       doc_grid.addRow(newRow, doc_grid.length +1);
+       doc_grid.beginEditCell(newRow);
+    }
+    function removeRow() {
+         var rows = doc_grid.getSelecteds();
+         if (rows.length > 0) {
+            doc_grid.removeRows(rows, true);                
+         }
+    }
         var MetaType = [
                        { id: "java.lang.Integer", text: 'Integer' },
                        { id: "java.lang.String", text: 'String'},
@@ -176,10 +181,22 @@
         ];
         
         var Comp = [
-                        { id: "date", text: '日期' },
-                        { id: "datetime", text: '日期带时间'},
-                        { id: "text", text: '文本'},
-                        { id: "hov", text: 'hov'}
+                        { id: "date", text: 'date' },
+                        { id: "datetime", text: 'datetime'},
+                        { id: "text", text: 'text'},
+                        { id: "hov", text: 'hov'},
+                        { id: "combobox",text:'combobox'},
+                        { id: "checkbox",text:'checkbox'}
+                        
+         ];
+        
+        var Scope = [
+                     { id: "表格,表单,查询,高级查询", text: '表格,表单,查询,高级查询' },
+                     { id: "表格", text: '表格'},
+                     { id: "表单", text: '表单'},
+                     { id: "查询", text: '查询'},
+                     { id: "高级查询", text:'高级查询'},
+                     { id: "表格,表单", text:'表格,表单'}
          ];
         //新增按钮
         function addSysButton(){
@@ -188,37 +205,55 @@
                  title: "新增按钮列表",
                  width: 600,
                  height: 350,
+                 onload: function () {       //弹出页面加载完成
+                    var iframe = this.getIFrameEl(); 
+                 	//取出当前行的Button
+                 	if(prop.length > 0){
+                 		for(var i = 0; i< prop.length;i++){
+                 			if(!isNull(prop[i].sysButton)){
+		                   		if(prop[i].sysButton.length > 0){
+				                    var data = {action:"ok",buttonData:prop[i].sysButton};       
+				                    //调用弹出页面方法进行初始化
+				                    iframe.contentWindow.SetData(data); 
+		                   		}else{//无元素则删除
+		                   			removeByValue(prop, prop[i]);
+		                   		}
+                 			}
+                 		}
+                 	}
+                 },
                  ondestroy: function (action) {
                      if (action == "ok") {
                          var iframe = this.getIFrameEl();
                          var data = iframe.contentWindow.GetData();
                          data = mini.clone(data);    //必须
                          if (data) {
-                        	var sysButton = {"sysButton":data};
-                        	prop.push(sysButton);
+                         	//取出当前行的hovMapping移除掉，换成最新的
+                         	if(prop.length > 0){
+         	                    for(var i = 0; i<prop.length;i++){
+         	                    	if(!isNull(prop[i].sysButton)){
+	                             	　　if(prop[i].sysButton > 0){
+	                                 		removeByValue(prop, prop[i]);
+	                             	　　}
+         	                    	}
+         	                    }
+                         	}
+                         	if(data.length > 0){
+                         		var sysButton = {"sysButton":data};
+                            	prop.push(sysButton);
+                         	}
                          }
                      }
                  }
              });
         }
-        function addCustomRow(){
-        	mini.alert("addCustomRow");
-        }
-        function addHovRow(){
-        	mini.alert("addHovRow");
-        }
-        
-        function removeDtlRow(){
-        	mini.alert("removeDtlRow");
-        }
         
         function cancelToParent(){
         	window.parent.parent.onShow();
 		}
-        function getData(){
-        	var data = window.parent.parent.getData();
-        	alert(data);
-    	}
+//         function getData(){
+//         	var data = window.parent.parent.getData();
+//     	}
         
         //hov下拉
         function onHowMapping(e) {
@@ -228,23 +263,62 @@
                 title: "默认hov回填值列表",
                 width: 600,
                 height: 350,
+                onload: function () {       //弹出页面加载完成
+                    var iframe = this.getIFrameEl(); 
+                	//取出当前行的hovMapping
+                	if(prop.length > 0){
+	                    for(var i = 0; i< prop.length;i++){
+                    	　　if(prop[i].field == row.name && prop[i].flag == "howMapping"){
+	                    		if(prop[i].howMappingData.length > 0){
+				                    var data = {action:"ok",mappingData:prop[i]};       
+				                    //调用弹出页面方法进行初始化
+				                    iframe.contentWindow.SetData(data); 
+	                    		}else{//无元素则删除
+	                    			removeByValue(prop, prop[i]);
+	                    		}
+                    	　　}
+	                    }
+                	}
+                },
                 ondestroy: function (action) {
                     if (action == "ok") {
                         var iframe = this.getIFrameEl();
                         var data = iframe.contentWindow.GetData();
                         data = mini.clone(data);    //必须
                         if (data) {
-                        	var howMappingName = row.name;
-                        	var howMappingTemp = {howMappingName:data,"flag":"howMapping"};
-                        	prop.push(howMappingTemp);
-                        	doc_grid.updateRow( row, {"hovOption.hovMapping":data[0].form});
-                        	doc_grid.cancelEdit();
+                        	//取出当前行的hovMapping移除掉，换成最新的
+                        	if(prop.length > 0){
+        	                    for(var i = 0; i<prop.length;i++){
+                            	　　if(prop[i].field == row.name && prop[i].flag == "howMapping"){
+                                		removeByValue(prop, prop[i]);
+                            	　　}
+        	                    }
+                        	}
+                        	if(data.length > 0){
+	                        	var howMappingName = row.name;
+	                        	var howMappingTemp = {"howMappingData":data,"flag":"howMapping","field":row.name};
+	                        	prop.push(howMappingTemp);
+	                        	doc_grid.updateRow( row, {"hovOption.hovMapping":data[0].from});
+	                        	doc_grid.cancelEdit();
+                        	}else{
+                        		doc_grid.updateRow( row, {"hovOption.hovMapping":""});
+	                        	doc_grid.cancelEdit();
+                        	}
                         }
                     }
-
                 }
             });
         }
+        //移除数组
+        function removeByValue(arr, val) {
+       	  for(var i=0; i<arr.length; i++) {
+       	    if(arr[i] == val) {
+       	      arr.splice(i, 1);
+       	      break;
+       	    }
+       	  }
+        }
+        	
         
         function onDropDown(e) {
        	 var row = doc_grid.getSelected();
@@ -253,46 +327,86 @@
                 title: "hov下拉显示列表",
                 width: 600,
                 height: 350,
-//                 onload: function () {       //弹出页面加载完成
-//                     var iframe = this.getIFrameEl(); 
-//                     var data = {action:"ok",key:row.name};       
-//                     //调用弹出页面方法进行初始化
-//                     iframe.contentWindow.SetData(data); 
-                                    
-//                 },
+                onload: function () {       //弹出页面加载完成
+                	var iframe = this.getIFrameEl(); 
+                	//取出当前行的dropDown
+                   	if(prop.length > 0){
+	                    for(var i = 0; i< prop.length;i++){
+                    	　　if(prop[i].field == row.name && prop[i].flag == "dropDown"){
+	                    		if(prop[i].howDropDownData.length > 0){
+	                    			var data = {action:"ok",dropDownData:prop[i]};       
+	     		                    //调用弹出页面方法进行初始化
+	     		                    iframe.contentWindow.SetData(data); 
+	                    		}else{//无元素则删除
+	                    			removeByValue(prop, prop[i]);
+	                    		}
+                    	　　}
+	                    }
+                	}
+                },
                 ondestroy: function (action) {
                     if (action == "ok") {
                         var iframe = this.getIFrameEl();
                         var data = iframe.contentWindow.GetData();
                         data = mini.clone(data);    //必须
                         if (data) {
-                        	var dropDownName = row.name;
-                        	var dropDownTemp = {dropDownName:data,"flag":"dropDown"};
-                        	prop.push(dropDownTemp);
-                        	doc_grid.updateRow( row, {"hovOption.dropDown":data[0].name});
-                        	doc_grid.cancelEdit();
+                        	//取出当前行的hovMapping移除掉，换成最新的
+                        	if(prop.length > 0){
+        	                    for(var i = 0; i<prop.length;i++){
+                            	　　if(prop[i].field == row.name && prop[i].flag == "dropDown"){
+                                		removeByValue(prop, prop[i]);
+                            	　　}
+        	                    }
+                        	}
+                        	if(data.length > 0){
+                        		var dropDownName = row.name;
+                            	var dropDownTemp = {"howDropDownData":data,"flag":"dropDown","field":row.name};
+                            	prop.push(dropDownTemp);
+                            	doc_grid.updateRow( row, {"hovOption.dropDown":data[0].name});
+                            	doc_grid.cancelEdit();
+                        	}else{
+                        		doc_grid.updateRow( row, {"hovOption.dropDown":""});
+                            	doc_grid.cancelEdit();
+                        	}
                         }
+                        
                     }
 
                 }
             });
         }
         
-        
+      //获取form页面数据
+      function generateCodeData(){
+    	  	doc_grid.selectAll();
+	      	var docdata = doc_grid.getSelecteds();
+	      	var tableColumns = getTableColumns(dtl_grid);
+	      	var docjson = mini.encode(docdata);
+	      	var generateCodeJson = {"dataJson":docdata,"prop":prop,"tableColumns":tableColumns};
+	      	return generateCodeJson;
+      }
         
         var prop = [];
         function generateCode(){
-        	debugger;
-        	doc_grid.selectAll();
-        	var docdata = doc_grid.getSelecteds();
-        	var tableColumns = getTableColumns(dtl_grid);
-        	var docjson = mini.encode(docdata);
-//         	console.info("dtljson: "+docjson);
-//         	console.info("tableColumns: "+tableColumns);
+        	if(formStatus == "0"){//单表
+        		var currentData = generateCodeData();
+        		generateCodeAjax(currentData,null,null,"0");
+        	}else if(formStatus == "1"){//总单
+        		var docData = generateCodeData();
+        		var dtlData = window.parent.document.getElementById("dtlIframe").contentWindow.generateCodeData();
+        		generateCodeAjax(null,docData,dtlData,"1");
+        	}else if(formStatus == "2"){//细单
+        		var dtlData = generateCodeData();
+        		var docData = window.parent.document.getElementById("docIframe").contentWindow.generateCodeData();
+        		generateCodeAjax(null,docData,dtlData,"2");
+        	}
+        }
+        
+        function generateCodeAjax(currentData,docData,dtlData,type){
         	$.ajax({
                 type: "POST",
                 url:"/miniCodegen/generateCode" ,
-                data: {"docJson":docjson,"prop":mini.encode(prop),"tableColumns":mini.encode(tableColumns)},
+                data: {"currentData":mini.encode(currentData),"docData":mini.encode(docData),"dtlData":mini.encode(dtlData),"getData":mini.encode(getData),"type":type},
                 success: function(AjaxMsg) {
                 	if(AjaxMsg.ok){
                 		mini.alert("代码生成成功!");
@@ -300,7 +414,7 @@
                 		mini.alert("代码生成失败:"+AjaxMsg.msg);
                 	}
                 }, error: function(error) {
-                	bootbox.alert(error);
+                	mini.alert(error);
                 }
             });
         }
@@ -331,6 +445,8 @@
 		    }
 		    return false;
 		}
+        
+        
       //]]> 	
     </script>
 

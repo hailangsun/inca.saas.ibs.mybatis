@@ -66,9 +66,14 @@ h4
 <body>
    
 <div id="tabs1" class="mini-tabs" activeIndex="0" style="width:100%;height:100%;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"  bodyStyle="padding:0;border:0;">
-    <div th:title="单表表单">
+    <div th:title="总单表单">
         <div class="mini-fit">
-           <iframe src="/miniCodegen/form?formStatus=0" style="width:100%;height:700px;"></iframe>
+           <iframe src="/miniCodegen/form?formStatus=1" style="width:100%;height:700px;" id="docIframe"></iframe>
+        </div>
+    </div>
+     <div th:title="细单表单">
+        <div class="mini-fit">
+           <iframe src="/miniCodegen/form?formStatus=2" style="width:100%;height:700px;" id="dtlIframe"></iframe>
         </div>
     </div>
 </div>
