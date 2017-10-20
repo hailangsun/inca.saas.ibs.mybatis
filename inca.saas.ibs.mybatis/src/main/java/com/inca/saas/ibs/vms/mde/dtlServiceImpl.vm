@@ -1,0 +1,32 @@
+package ${model.dtlPkgName};
+
+import com.inca.saas.miniui.MiniDtlServiceImpl;
+import com.inca.saas.miniui.MiniuiQuery;
+
+/**
+ * @date: ($model.timestamp)
+ * @author: <$model.author>
+ */
+@Service(${model.dtlEntityClassName}DtlService.SERVICE_NAME)
+@Transactional
+public class ${model.dtlEntityClassName}DtlServiceImpl extends MiniDtlServiceImpl implements ${model.dtlEntityClassName}DtlService {
+	final Log log = LogFactory.getLog(getClass());
+	
+	@Override
+    public String getBaseSQL(MiniuiQuery query) {
+        query.setLoggerPrefix(${model.dtlPrefix});
+        StringBuffer whereSQL = getWhereSQL(query);
+        String sql = ${model.dtlBaseSql}+whereSQL.toString();
+		
+        String wheres = getWheres(query);
+        if(!StringUtils.isEmpty(wheres)){
+            sql="select * from ("+sql+") a where "+wheres;
+        }
+        return sql;
+    }
+	
+	 private StringBuffer getWhereSQL(MiniuiQuery query){
+		StringBuffer sb = new StringBuffer();
+		 return sb;
+	 }
+}

@@ -1,0 +1,38 @@
+package ${model.pkgName};
+
+import com.inca.saas.miniui.MiniDtlServiceImpl;
+import com.inca.saas.miniui.MiniuiQuery;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import com.inca.saas.miniui.convert.ColumnConvert;
+import com.inca.saas.miniui.convert.ConvertInitContext;
+
+/**
+ * @date: ($model.timestamp)
+ * @author: <$model.author>
+ */
+@Component("suplan_convert")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class ${model.entityClassName}Convert implements ColumnConvert {
+	final Log log = LogFactory.getLog(getClass());
+	
+	private static final long serialVersionUID = 1L;
+	
+	@Override
+	public void init(ConvertInitContext initContext) {
+		// TODO Auto-generated method stub
+		ColumnConvert.super.init(initContext);
+	}
+	
+	@Override
+    public String convert(ConvertContext context) {
+        Map<String, Object> row = context.getRow();
+			
+		if(context.getField().equals("lsPrice")){
+			return lsPrice.toString();
+		}else if(context.getField().equals("lsPrice1")){
+			return "111111111";
+		}else{
+			return "-400";
+		}
+    }
+}

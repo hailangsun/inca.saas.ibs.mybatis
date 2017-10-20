@@ -1,0 +1,12 @@
+package ${model.dtlPkgName};
+
+
+/**
+ * @date: ($model.timestamp)
+ * @author: <$model.author>
+ */
+public interface ${model.dtlEntityClassName}DtlService {
+
+	static final String SERVICE_NAME = "${model.dtlSubsysName}${model.dtlEntityClassName}DtlService";
+	
+}

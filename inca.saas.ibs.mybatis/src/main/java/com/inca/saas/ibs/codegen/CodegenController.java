@@ -2,6 +2,8 @@ package com.inca.saas.ibs.codegen;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,11 @@ import javax.persistence.Column;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -27,6 +34,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.inca.saas.ibs.codegen.EntityPropertis.SysOption;
 import com.inca.saas.ibs.common.Option;
 import com.inca.saas.ibs.common.Title;
+import com.inca.saas.ibs.demo.TestVelocityJava.Demo;
 
 @Controller
 @RequestMapping(CodegenController.FUNC_PATH)
@@ -214,6 +222,8 @@ public class CodegenController {
 	@ResponseBody
 	public AjaxMsg generateCode(String currentData,String dtlData,String docData,String getData,String type){
 		
+		JSONObject getDataStr = JSONObject.parseObject(getData);
+		getDataStr.get("");
 		Document doc = DocumentHelper.createDocument();
         //增加根节点
         Element model = doc.addElement("model");
@@ -363,5 +373,35 @@ public class CodegenController {
 		}
       
 		return AjaxMsg.ok();
+	}
+	
+	//生成java 
+	public void getCreateJava(CodegenModel codegenModel){
+		
+		
+		VelocityEngine ve = new VelocityEngine();
+		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		Template template = ve.getTemplate("com/inca/saas/ibs/vms/controller.vm");
+		
+		VelocityContext context = new VelocityContext();
+		context.put("model", codegenModel);
+		StringWriter sw = new StringWriter();
+		File saveDir = new File("E:" ,codegenModel.getPkgName() +"Controller.java");
+				
+		
+		template.merge(context, sw);
+		String text = sw.toString();
+		FileWriter writer;
+		try {
+			sw.close();
+			writer = new FileWriter(saveDir);
+			writer.write(text);
+			writer.flush();
+			writer.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

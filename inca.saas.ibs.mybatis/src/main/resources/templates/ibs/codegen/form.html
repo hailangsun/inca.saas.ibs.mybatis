@@ -140,8 +140,8 @@
     var formStatus = /*[[${formStatus}]]*/;
 	var	getData = mini.decode(window.parent.parent.getData());
 	if(formStatus == "0"){//单表
-	    if(!isNull(getData[0].entityName)){
-	    	getDataColumns(getData[0].entityName,getData[0].baseSql,getData[0].className);
+	    if(!isNull(getData.entityName)){
+	    	getDataColumns(getData.entityName,getData.baseSql,getData.className);
 	    }
 	}else if(formStatus == "1"){//总单
 		if(!isNull(getData[0].docEntityName)){

@@ -1,0 +1,32 @@
+package ${model.docPkgName};
+
+import com.inca.saas.miniui.MiniDocServiceImpl;
+import com.inca.saas.miniui.MiniuiQuery;
+
+/**
+ * @date: ($model.timestamp)
+ * @author: <$model.author>
+ */
+@Service(${model.docEntityClassName}DocService.SERVICE_NAME)
+@Transactional
+public class ${model.docEntityClassName}DocServiceImpl extends MiniDocServiceImpl implements ${model.docEntityClassName}DocService {
+	final Log log = LogFactory.getLog(getClass());
+	
+	@Override
+    public String getBaseSQL(MiniuiQuery query) {
+        query.setLoggerPrefix(${model.docPrefix});
+        StringBuffer whereSQL = getWhereSQL(query);
+        String sql = ${model.docBaseSql}+whereSQL.toString();
+		
+        String wheres = getWheres(query);
+        if(!StringUtils.isEmpty(wheres)){
+            sql="select * from ("+sql+") a where "+wheres;
+        }
+        return sql;
+    }
+	
+	 private StringBuffer getWhereSQL(MiniuiQuery query){
+		StringBuffer sb = new StringBuffer();
+		 return sb;
+	 }
+}

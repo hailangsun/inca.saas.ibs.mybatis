@@ -1,0 +1,31 @@
+package ${model.pkgName};
+
+import com.inca.saas.miniui.MiniSteController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+@RequestMapping(${model.className}Controller.funcPath)
+public class ${model.className}Controller extends MiniSteController {
+	final Log log = LogFactory.getLog(getClass());
+	
+    public static  final String funcPath="${model.funcPath}";
+	
+    /**
+     * 
+     * ${model.explain}
+     * defaultModelAndView.getModelMap().addAttribute("abc","123");
+     * 
+     */
+    @Override
+    public ModelAndView getHomeModelAndView(ModelAndView defaultModelAndView) {
+        return super.getHomeModelAndView(defaultModelAndView);
+    }
+	
+	@RequestMapping(value = "/importTemp", method = RequestMethod.GET)
+	public void download(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    Map<String,Object> map = new LinkedHashMap<>();
+		serviceManager.lookup(CommonService.SERVICE_NAME, CommonService.class).download(request, response, map);
+	}
+}
