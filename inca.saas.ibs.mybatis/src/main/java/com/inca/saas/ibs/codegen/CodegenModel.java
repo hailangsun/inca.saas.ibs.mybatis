@@ -1,7 +1,16 @@
 package com.inca.saas.ibs.codegen;
 
+import java.io.File;
+
 public class CodegenModel {
-	private String pkgName;
+	//基础包名
+	
+	//保存路径
+	private File savePath;
+	
+	private String basePkgName = "com.inca.saas.ibs";
+	private String name;//controller前缀名
+	
 	private String entityClassName;
 	private String dtlEntityClassName;
 	private String docEntityClassName;
@@ -12,12 +21,7 @@ public class CodegenModel {
 	private String dtlBaseSql;
 	private String docBaseSql;
 	
-	public String getPkgName() {
-		return pkgName;
-	}
-	public void setPkgName(String pkgName) {
-		this.pkgName = pkgName;
-	}
+
 	public String getEntityClassName() {
 		return entityClassName;
 	}
@@ -72,5 +76,26 @@ public class CodegenModel {
 	public void setDocBaseSql(String docBaseSql) {
 		this.docBaseSql = docBaseSql;
 	}
+	public String getBasePkgName() {
+		return basePkgName;
+	}
+	public void setBasePkgName(String basePkgName) {
+		this.basePkgName = basePkgName;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public File getSavePath() {
+		return savePath;
+	}
+	public void setSavePath(File savePath) {
+		this.savePath = savePath;
+	}
+	
+	
+	
 	
 }

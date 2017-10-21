@@ -144,12 +144,12 @@
 	    	getDataColumns(getData.entityName,getData.baseSql,getData.className);
 	    }
 	}else if(formStatus == "1"){//总单
-		if(!isNull(getData[0].docEntityName)){
-	    	getDataColumns(getData[0].docEntityName,getData[0].docBaseSql,getData[0].className);
+		if(!isNull(getData.docEntityName)){
+	    	getDataColumns(getData.docEntityName,getData.docBaseSql,getData.className);
 	    }
 	}else if(formStatus == "2"){//细单
-		if(!isNull(getData[0].dtlEntityName)){
-	    	getDataColumns(getData[0].dtlEntityName,getData[0].dtlBaseSql,getData[0].className);
+		if(!isNull(getData.dtlEntityName)){
+	    	getDataColumns(getData.dtlEntityName,getData.dtlBaseSql,getData.className);
 	    }
 	}
 	

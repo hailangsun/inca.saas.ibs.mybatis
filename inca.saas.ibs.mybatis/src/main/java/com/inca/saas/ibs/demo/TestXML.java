@@ -69,11 +69,12 @@ public class TestXML {
 //	        XMLWriter writer = new XMLWriter(new FileOutputStream(file), format);
 //	        //开始写入，write方法中包含上面创建的Document对象
 //	        writer.write(doc);
-//	        
+	        String path = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+	        path = path.substring(1, path.length());
 		    //实例化输出格式对象
 	        OutputFormat format = OutputFormat.createPrettyPrint();
 	        //创建需要写入的File对象
-	        File file = new File("D:" + File.separator + "dtlModel.html");
+	        File file = new File(path+ "dtlModel.html");
 	        //生成XMLWriter对象，构造函数中的参数为需要输出的文件流和格式
 	        HTMLWriter writer = new HTMLWriter(new FileOutputStream(file), format);
 	        //开始写入，write方法中包含上面创建的Document对象

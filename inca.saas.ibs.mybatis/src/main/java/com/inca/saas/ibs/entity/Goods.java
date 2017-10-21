@@ -5,9 +5,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 
+import com.inca.saas.ibs.common.Func;
 import com.inca.saas.ibs.common.Option;
 import com.inca.saas.ibs.common.Title;
 
+@Title("商品管理")
+@Func("IBSPUB010")
 public class Goods {
 	
 	@Title("商品编码")

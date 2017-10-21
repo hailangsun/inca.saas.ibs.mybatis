@@ -1,6 +1,5 @@
 import java.io.File
 
-import com.inca.saas.codegen.EntityMetadata;;
 
 class MdeGenerator {
 	
@@ -28,9 +27,6 @@ class MdeGenerator {
 	
 	Class detailEntityClass
 	
-	EntityMetadata masterEntityMetadata
-	
-	EntityMetadata detailEntityMetadata
 	
 	//细单中总单实体的成员变量名
 	String mappedBy

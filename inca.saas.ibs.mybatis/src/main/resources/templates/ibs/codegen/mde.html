@@ -113,19 +113,19 @@ h4
    			var url="/miniCodegen/mdeDesign";
    			$("#miniuiMdeFrame").attr("src",url);
    			$(".parent-page").hide();
-   			$("#mdeIframeDiv").show();
+   			$("#miniuiMdeFrame").show();
        }
        
        function onShow(){
     	   $(".parent-page").show();
-    	   $("#docIframeDiv").hide();
-    	   $("#dtlIframeDiv").hide();
+    	   $("#miniuiMdeFrame").hide();
        }
+       
        function getData(){
 //     	   var data = $("#steform").serialize();
     	   var steForm 	= new mini.Form("mdeForm");
     	   var steFormData = steForm.getData();            
-           var steFormJson = mini.encode([steFormData]);
+           var steFormJson = mini.encode(steFormData);
     	   return steFormJson;
        }
     </script>
