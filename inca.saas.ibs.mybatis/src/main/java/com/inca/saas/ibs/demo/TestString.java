@@ -6,9 +6,9 @@ import java.util.Map;
 public class TestString {
 	public static void main(String[] args) {
 		Map<String, Object> invdoc = new HashMap<>();
-		invdoc.put("accountset_id", Integer.valueOf(5));
+		invdoc.put("accountset_id", "");
 		
-		String accountset_id = invdoc.get("accountset_id")+"";
+		Integer accountset_id = (Integer)invdoc.get("accountset_id");
 		System.out.println(accountset_id);
 		
 	}

@@ -1,0 +1,8 @@
+package ${model.basePkgName};
+
+
+public interface ${model.controllerName}Service {
+
+	static final String SERVICE_NAME = "${model.docSubsysName}${model.controllerName}Service";
+	
+}

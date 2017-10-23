@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import javax.persistence.Column;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.velocity.Template;
@@ -130,17 +131,19 @@ public class CodegenController {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/miniuiSearch")
 	@ResponseBody
 	public Map<String, Object> miniSearch(String entityName,String sql) {
 		Map<String, Object> map = new HashMap<>();
 		List<CodegenTableColumn> columns = new ArrayList<>();
-//		QueryResult search = new QueryResult<>();
 		try {
 			List<EntityPropertis> ListMap = new ArrayList<>();
 			Object ob = getEntity(entityName);//"com.inca.saas.ibs.entity.Goods"
-			java.lang.reflect.Field[] fields = ((Class<? extends CodegenController>) ob).getDeclaredFields();  
-			for (java.lang.reflect.Field f:fields) {
+			java.lang.reflect.Field[] fields = ((Class<? extends CodegenController>) ob).getDeclaredFields();
+			java.lang.reflect.Field[] superFields = ((Class<? extends CodegenController>) ob).getSuperclass().getDeclaredFields();
+			java.lang.reflect.Field[] allFields = (java.lang.reflect.Field[]) ArrayUtils.addAll(fields, superFields);
+			for (java.lang.reflect.Field f:allFields) {
 				CodegenTableColumn codegenTableColumn = new CodegenTableColumn();
 				EntityPropertis entityPropertis = new EntityPropertis();
 				Title title = f.getAnnotation(Title.class);
@@ -150,7 +153,6 @@ public class CodegenController {
 				entityPropertis.name(column.name());
 				String classType = getClassType(f.getType()+"");
 				entityPropertis.metaType(classType);//设置类型
-//				entityPropertis.comp(classType);//控件类型
 				if(option != null){
 					entityPropertis.sysOption(new SysOption().field(column.name()).keyword(option.name()));
 				}
@@ -195,11 +197,10 @@ public class CodegenController {
 		return "ibs/codegen/dropDown";
 	}
 	
-	private void createXml(String type,String currentData,String getData,File dir){
+	private void createXml(String type,String currentData,String getData,File dir,File xmldir){
 		String entity = "";
 		String title = "";
 		String docOrDtl = "";
-		//com.inca.saas.ibs.common.Title
 		JSONObject getDataStr = JSONObject.parseObject(getData);
 		if("0".equals(type)){
 			entity = (String) getDataStr.get("entityName");
@@ -343,7 +344,7 @@ public class CodegenController {
         OutputFormat format = OutputFormat.createPrettyPrint();
         //设置输出编码
         format.setEncoding("UTF-8");
-		File file = new File(dir, docOrDtl+".xml");
+		File file = new File(xmldir, docOrDtl+".xml");
         //生成XMLWriter对象，构造函数中的参数为需要输出的文件流和格式
         XMLWriter writer;
 		try {
@@ -371,28 +372,46 @@ public class CodegenController {
 		
 		//生成两个目录，一个是java 一个是html
 		
-		String entity = "";
-		String title = "";
 		JSONObject getDataStr = JSONObject.parseObject(getData);
+		String entity = "";
+		String title = getDataStr.getString("className");
+		String dtlBaseSql = "";
+		String docBaseSql = "";
+		String docSubsysName = "";
+		String dtlSubsysName = "";
+		String subsysName = "";
+		String entityPath = "com.inca.saas.ibs";
+		String[] subEntity = null;
 		if("0".equals(type)){
 			entity = (String) getDataStr.get("entityName");
+			subEntity = entity.split("\\.");
+			subsysName = subEntity[subEntity.length - 2];
 		}else if("1".equals(type)){
 			entity = (String) getDataStr.get("docEntityName");
+			subEntity = entity.split("\\.");
+			docSubsysName = subEntity[subEntity.length - 2];
 		}else if("2".equals(type)){
 			entity = (String) getDataStr.get("dtlEntityName");
+			subEntity = entity.split("\\.");
+			dtlSubsysName = subEntity[subEntity.length - 2];
 		}
-		String entityPath = "com.inca.saas.ibs";
+		entityPath+="."+subEntity[subEntity.length - 2];
+		entityPath+="."+subEntity[subEntity.length - 1];
 		
-		//创建需要写入的File对象
+		
+		docBaseSql = getDataStr.getString("docBaseSql")+"";
+		dtlBaseSql = getDataStr.getString("dtlBaseSql")+"";
+		
+		
+		
+		//创建需要写入的File对象 生成JAVA
         String path = Thread.currentThread().getContextClassLoader().getResource("").getPath();
         path = path.substring(1, path.length());
         path = path.replace("bin/", "");
         //File file = new File(path+"src"+ File.separator +"gen"+File.separator+"sample"+File.separator+"java"+File.separator+docOrDtl+".xml");
-        String[] subEntity = entity.split("\\.");
-		entityPath+="."+subEntity[subEntity.length - 2];
-		entityPath+="."+subEntity[subEntity.length - 1];
-		title = subEntity[subEntity.length - 1];
+      
 		
+		//生成XML
         String saveDir = path+"src"+ File.separator +"gen"+File.separator+"sample"+File.separator;//实际路径
         File dir = new File(saveDir, "java");
 		dir = new File(dir, entityPath.replace(".", File.separator));
@@ -400,58 +419,92 @@ public class CodegenController {
 			dir.mkdirs();
 		}
 		
+		
+		String xmlSaveDir = path+"src"+ File.separator +"gen"+File.separator+"sample"+File.separator+"resources";//实际路径
+        File xmldir = new File(xmlSaveDir, "templates");
+        xmldir = new File(xmldir, entityPath.replace(".", File.separator));
+		if (!xmldir.exists()) {
+			xmldir.mkdirs();
+		}
+		
 		if(!"null".equals(currentData) && currentData != null){
 			type = "0";
-			createXml(type,currentData,getData,dir);
+			createXml(type,currentData,getData,dir,xmldir);
 		}
 		
 		if(!"null".equals(docData) && docData != null){
 			type = "1";
-			createXml(type,docData,getData,dir);
+			createXml(type,docData,getData,dir,xmldir);
+			
+			CodegenModel codegenModel = new CodegenModel();
+			codegenModel.setSavePath(dir);//保存路径
+			codegenModel.setControllerName(title);
+			codegenModel.setBasePkgName(entity);
+			codegenModel.setDocBaseSql(docBaseSql);
+			codegenModel.setDtlBaseSql(dtlBaseSql);
+			codegenModel.setDocSubsysName(docSubsysName);
+			codegenModel.setDtlSubsysName(dtlSubsysName);
+			try {
+				getCreateJava(codegenModel,type);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		if(!"null".equals(dtlData) && dtlData != null){
 			type ="2";
-			createXml(type,dtlData,getData,dir);
+			createXml(type,dtlData,getData,dir,xmldir);
 		}
 		
-
+		//生成controll
+		String controllHtml = "";
+		if(type.equals("1") || type.equals("2")){
+			 controllHtml = "mde/controll.vm";
+		}else{
+			controllHtml = "ste/controll.vm";
+		}
 		CodegenModel codegenModel = new CodegenModel();
-		codegenModel.setSavePath(dir);//保存路径
-		
-		codegenModel.setDocBaseSql("select * from pub_goods");
-		codegenModel.setName(title);
-		
+		codegenModel.setSavePath(xmldir);//保存路径
 		try {
-			getCreateJava(codegenModel);
+			getCreateControll(codegenModel,controllHtml);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return AjaxMsg.ok();
 	}
 	
 	//生成java 
-	public void getCreateJava(CodegenModel codegenModel) throws Exception{
+	public void getCreateJava(CodegenModel codegenModel,String type) throws Exception{
 		Map<String,String> mdeMap = new HashMap<>();
-		mdeMap.put("Controller", "controller.vm");
-		mdeMap.put("Convert", "convert.vm");
-		mdeMap.put("DocService", "docService.vm");
-		mdeMap.put("DocServiceImpl", "docServiceImpl.vm");
-		mdeMap.put("DtlService", "dtlService.vm");
-		mdeMap.put("DtlServiceImpl", "dtlServiceImpl.vm");
+		String templatePath = "";
+		if("1".equals(type)){
+			mdeMap.put("Controller", "controller.vm");
+			mdeMap.put("Convert", "convert.vm");
+			mdeMap.put("DocService", "docService.vm");
+			mdeMap.put("DocServiceImpl", "docServiceImpl.vm");
+			mdeMap.put("DtlService", "dtlService.vm");
+			mdeMap.put("DtlServiceImpl", "dtlServiceImpl.vm");
+			templatePath = "com/inca/saas/ibs/vms/mde/";
+		}
+		if("0".equals(type)){
+			mdeMap.put("Controller", "controller.vm");
+			mdeMap.put("Convert", "convert.vm");
+			mdeMap.put("Service", "service.vm");
+			mdeMap.put("serviceImpl", "serviceImpl.vm");
+			templatePath = "com/inca/saas/ibs/vms/ste/";
+		}
 		
-		
-		
-		VelocityEngine ve = new VelocityEngine();
-		
-		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
-		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-		Template template = new Template();
-		VelocityContext context = new VelocityContext();
-		StringWriter sw = new StringWriter();
 		for (Entry<String, String> map : mdeMap.entrySet()) {
-			template = ve.getTemplate("com/inca/saas/ibs/vms/mde/"+map.getValue());
+			VelocityEngine ve = new VelocityEngine();
+			ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+			ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+			VelocityContext context = new VelocityContext();
+			StringWriter sw = new StringWriter();
+			Template template = new Template();
+			template = ve.getTemplate(templatePath+map.getValue());
 			context.put("model", codegenModel);
 			
 			template.merge(context, sw);
@@ -459,7 +512,7 @@ public class CodegenController {
 			FileWriter writer;
 			try {
 				sw.close();
-				writer = new FileWriter(new File(codegenModel.getSavePath(),codegenModel.getName() +map.getKey()+".java"));
+				writer = new FileWriter(new File(codegenModel.getSavePath(),codegenModel.getControllerName() +map.getKey()+".java"));
 				writer.write(text);
 				writer.flush();
 				writer.close();
@@ -469,157 +522,33 @@ public class CodegenController {
 			}
 		}
 		
-		
 	}
 	
+	//生成java 
+	public void getCreateControll(CodegenModel codegenModel,String name) throws Exception{
+		VelocityEngine ve = new VelocityEngine();
+		ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+		ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		VelocityContext context = new VelocityContext();
+		StringWriter sw = new StringWriter();
+		Template template = new Template();
+		template = ve.getTemplate("com/inca/saas/ibs/vms/"+name);
+		context.put("model", codegenModel);
+		
+		template.merge(context, sw);
+		String text = sw.toString();
+		FileWriter writer;
+		try {
+			sw.close();
+			writer = new FileWriter(new File(codegenModel.getSavePath(), "controll.html"));
+			writer.write(text);
+			writer.flush();
+			writer.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+	}
 	
-	
-	
-//	Document doc = DocumentHelper.createDocument();
-//    //增加根节点
-//    Element model = doc.addElement("model");
-//    model.addAttribute("title", "采购计划");
-//    model.addAttribute("entity", "com.inca.saas.ibs.entity.pur.SuPlanDtl");
-//    //添加元素
-//    Element form = model.addElement("form");
-//    Element table = model.addElement("table");
-//    Element comps = model.addElement("comps");
-//    Element buttons = model.addElement("buttons");
-//	
-//	JSONObject currentDataObject = JSONObject.parseObject(currentData);
-//	
-////	JSONObject dtlDataObject = JSONObject.parseObject(dtlData);
-////	JSONObject docDataObject = JSONObject.parseObject(docData);
-//	
-//	
-//	String data = currentDataObject.getString("dataJson");//总数
-//	String prop = currentDataObject.getString("prop");//hov、下拉显示、状态等
-//	String tableColumns = currentDataObject.getString("tableColumns");//显示列
-//	
-//	JSONArray jsonArray = JSONArray.parseArray(data);
-//	JSONArray jsonTableColumnsArray = JSONArray.parseArray(tableColumns);
-//	JSONArray propAll = JSONArray.parseArray(prop);
-//	for (int i = 0; i < jsonArray.size(); i++) {
-//		JSONObject dataJ = jsonArray.getJSONObject(i);
-//		 //添加基本元素
-//    	 Element field = form.addElement("field");
-//    	 field.addAttribute("name", dataJ.getString("name"));
-//    	 field.addAttribute("title", dataJ.getString("title"));
-//    	 field.addAttribute("metaType", dataJ.getString("metaType"));
-//    	 field.addAttribute("width", "150px");
-//    	 field.addAttribute("hidden", dataJ.getString("hidden"));
-//    	 field.addAttribute("comp", dataJ.getString("comp"));
-//    	 field.addAttribute("dbCol", dataJ.getString("dbCol"));
-//    	 field.addAttribute("readOnly", dataJ.getString("readOnly"));
-//    	 field.addAttribute("advQuery", dataJ.getString("advQuery"));
-//    	 field.addAttribute("query", dataJ.getString("query"));
-//    	 field.addAttribute("required", dataJ.getString("required"));
-//    	 field.addAttribute("keyword", dataJ.getString("keyword"));
-//    	 field.addAttribute("virtual", dataJ.getString("virtual"));
-//    	 field.addAttribute("convert", dataJ.getString("convert"));
-//    	 String sysOptionStr = dataJ.getString("sysOption");
-//    	 if(!"".equals(sysOptionStr) && sysOptionStr != null){
-//    		 JSONObject sysOption =  JSONObject.parseObject(sysOptionStr);
-//    		 //系统下拉选项
-//    		 if(!"".equals(sysOption.getString("field")) && sysOption.getString("field") != null){
-//    			 Element combobox = comps.addElement("combobox");
-//    			 combobox.addAttribute("field", sysOption.getString("field"));
-//    			 combobox.addAttribute("keyword", sysOption.getString("keyword"));
-//    		 }
-//    	 }
-//	}
-//	
-//	//hov循环
-//	for (int i = 0; i < jsonArray.size(); i++) {
-//		JSONObject dataJ = jsonArray.getJSONObject(i);
-//		String hovOptionStr = dataJ.getString("hovOption");
-//	 	 //是否为hov
-//    	 if(dataJ.getString("isHov") != null && "true".equals(dataJ.getString("isHov"))){
-//    		 if(!"".equals(hovOptionStr) && hovOptionStr != null){
-//    			 JSONObject hovOption =  JSONObject.parseObject(hovOptionStr);
-//    			 Element hov = comps.addElement("hov");
-//    			 hov.addAttribute("field", dataJ.getString("name"));
-//    			 hov.addAttribute("url", hovOption.getString("url"));
-//    			 hov.addAttribute("scope", hovOption.getString("scope"));
-//    			 
-//    			 //遍历hovMapping属性回填
-//   				for (int j = 0; j < propAll.size(); j++) {
-//   					JSONObject propJ = propAll.getJSONObject(j);
-//   					if(propJ.get("field") != null && propJ.get("field").equals(dataJ.getString("name"))){
-//   						if("howMapping".equals(propJ.get("flag"))){
-//   							JSONArray howMappingArray = JSONArray.parseArray(propJ.get("howMappingData")+"");
-//   							for (int k = 0; k < howMappingArray.size(); k++) {
-//   									JSONObject 	howMappingJ = howMappingArray.getJSONObject(k);
-//							 	    	Element hovMapping = hov.addElement("hovMapping");
-//							 	    	hovMapping.addAttribute("from", howMappingJ.getString("from"));
-//							 	    	hovMapping.addAttribute("to", howMappingJ.getString("to"));
-//								}
-//   						}
-//   					}
-//   				}
-//    			 
-//    			 if(hovOption.getString("autoComplete") != null && "true".equals(hovOption.getString("autoComplete"))){
-//    				 hov.addAttribute("autoComplete", hovOption.getString("autoComplete"));
-//    				 hov.addAttribute("searchUrl", hovOption.getString("searchUrl"));
-//    				 //遍历hov下拉显示
-//    				 for (int j = 0; j < propAll.size(); j++) {
-//    					 JSONObject propJ = propAll.getJSONObject(j);
-//    					 if(propJ.get("field") != null && propJ.get("field").equals(dataJ.getString("name"))){
-//    						 if("dropDown".equals(propJ.get("flag"))){
-//    							 JSONArray howMappingArray = JSONArray.parseArray(propJ.get("howDropDownData")+"");
-//    							 for (int k = 0; k < howMappingArray.size(); k++) {
-//    								 JSONObject 	howMappingJ = howMappingArray.getJSONObject(k);
-//    								 Element hovMapping = hov.addElement("field");
-//    								 hovMapping.addAttribute("name", howMappingJ.getString("name"));
-//    								 hovMapping.addAttribute("title", howMappingJ.getString("title"));
-//    							 }
-//    						 }
-//    					 }
-//    				 }
-//    			 }
-//    			
-//				
-//    		 }
-//    	 }
-//	}
-//	
-//	StringBuffer sb = new StringBuffer();
-//	for (int i = 0; i < jsonTableColumnsArray.size(); i++) {
-//		JSONObject columnsJ = jsonTableColumnsArray.getJSONObject(i);
-//		sb.append(columnsJ.get("field")+",");
-//	}
-//    //添加显示
-//    table.setText(sb.substring(0, sb.length()-1));
-//   
-//    //添加按钮
-//    for (int i = 0; i < propAll.size(); i++) {
-//		JSONObject propJ = propAll.getJSONObject(i);
-//		if(!"".equals(propJ.get("sysButton")) && propJ.get("sysButton") != null){
-//			JSONArray buttonArray = JSONArray.parseArray(propJ.get("sysButton")+"");
-//			for (int k = 0; k < buttonArray.size(); k++) {
-//				JSONObject 	buttonJ = buttonArray.getJSONObject(k);
-//				Element button = buttons.addElement("button");
-//				button.addAttribute("onClick", buttonJ.getString("onClick"));
-//				button.addAttribute("scope", buttonJ.getString("scope"));
-//				button.addText(buttonJ.getString("clickName"));
-//			}
-//		}
-//	}
-//    
-//    //实例化输出格式对象
-//    OutputFormat format = OutputFormat.createPrettyPrint();
-//    //设置输出编码
-//    format.setEncoding("UTF-8");
-//    //创建需要写入的File对象
-//    File file = new File("E:" + File.separator + "dtlModel.xml");
-//    //生成XMLWriter对象，构造函数中的参数为需要输出的文件流和格式
-//    XMLWriter writer;
-//	try {
-//		writer = new XMLWriter(new FileOutputStream(file), format);
-//		  //开始写入，write方法中包含上面创建的Document对象
-//        writer.write(doc);
-//	} catch (Exception e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
 }

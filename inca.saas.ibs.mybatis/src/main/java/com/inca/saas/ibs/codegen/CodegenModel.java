@@ -7,9 +7,16 @@ public class CodegenModel {
 	
 	//保存路径
 	private File savePath;
-	
-	private String basePkgName = "com.inca.saas.ibs";
-	private String name;//controller前缀名
+	private String basePkgName;
+	private String controllerName;//controller前缀名
+	private String funcPath;
+	private String dtlBaseSql;
+	private String docBaseSql;
+	private String baseSql;
+	private String explain;
+	private String docSubsysName;
+	private String dtlSubsysName;
+	private String subsysName;
 	
 	private String entityClassName;
 	private String dtlEntityClassName;
@@ -17,9 +24,7 @@ public class CodegenModel {
 	private String docPrefix;
 	private String dtlPrefix;
 	private String prefix;
-	private String docSubsysName;
-	private String dtlBaseSql;
-	private String docBaseSql;
+	
 	
 
 	public String getEntityClassName() {
@@ -82,17 +87,49 @@ public class CodegenModel {
 	public void setBasePkgName(String basePkgName) {
 		this.basePkgName = basePkgName;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+
 	public File getSavePath() {
 		return savePath;
 	}
 	public void setSavePath(File savePath) {
 		this.savePath = savePath;
+	}
+	
+	public String getFuncPath() {
+		return funcPath;
+	}
+	public void setFuncPath(String funcPath) {
+		this.funcPath = funcPath;
+	}
+	public String getBaseSql() {
+		return baseSql;
+	}
+	public void setBaseSql(String baseSql) {
+		this.baseSql = baseSql;
+	}
+	public String getExplain() {
+		return explain;
+	}
+	public void setExplain(String explain) {
+		this.explain = explain;
+	}
+	public String getControllerName() {
+		return controllerName;
+	}
+	public void setControllerName(String controllerName) {
+		this.controllerName = controllerName;
+	}
+	public String getDtlSubsysName() {
+		return dtlSubsysName;
+	}
+	public void setDtlSubsysName(String dtlSubsysName) {
+		this.dtlSubsysName = dtlSubsysName;
+	}
+	public String getSubsysName() {
+		return subsysName;
+	}
+	public void setSubsysName(String subsysName) {
+		this.subsysName = subsysName;
 	}
 	
 	

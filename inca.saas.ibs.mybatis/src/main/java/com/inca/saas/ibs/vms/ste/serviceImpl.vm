@@ -1,6 +1,5 @@
 package ${model.basePkgName};
 
-import com.inca.saas.miniui.MiniDocServiceImpl;
 import com.inca.saas.miniui.MiniuiQuery;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -8,16 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-@Service(${model.controllerName}DocService.SERVICE_NAME)
+@Service(${model.controllerName}Service.SERVICE_NAME)
 @Transactional
-public class ${model.controllerName}DocServiceImpl extends MiniDocServiceImpl implements ${model.controllerName}DocService {
+public class ${model.controllerName}ServiceImpl extends MiniBaseServiceImpl implements ${model.controllerName}Service {
 	final Log log = LogFactory.getLog(getClass());
 	
 	@Override
     public String getBaseSQL(MiniuiQuery query) {
-        query.setLoggerPrefix(${model.docPrefix});
+        query.setLoggerPrefix(${model.prefix});
         StringBuffer whereSQL = getWhereSQL(query);
-        String sql = "${model.docBaseSql}"+whereSQL.toString();
+        String sql = "${model.baseSql}"+whereSQL.toString();
 		
         String wheres = getWheres(query);
         if(!StringUtils.isEmpty(wheres)){

@@ -1,6 +1,6 @@
 package ${model.basePkgName};
 
-import com.inca.saas.miniui.MiniMdeController;
+import com.inca.saas.miniui.MiniSteController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(${model.controllerName}Controller.funcPath)
-public class ${model.controllerName}Controller extends MiniMdeController {
+public class ${model.controllerName}Controller extends MiniSteController {
 	final Log log = LogFactory.getLog(getClass());
 	
     public static  final String funcPath="${model.funcPath}";

@@ -1,0 +1,292 @@
+<!--home and form -->
+<div th:fragment="common">
+<script th:src="@{/js/miniBillStop.js}"></script>
+<script src="/lib/bootboxjs-4.4.0/bootbox.min.js"></script>
+<script src="/lib/DataTables-1.10.7/media/js/jquery.dataTables.min.js"></script>
+<script th:inline="javascript">
+    //<![CDATA[
+    
+    function needHideTr(){
+    	return 2;
+    }
+
+	
+    //]]>
+</script>
+</div>
+
+<!--only home-->
+<div th:fragment="home">
+    
+    <script th:inline="javascript">
+        //<![CDATA[
+        
+
+        // home init
+		mdeHomePage.getDocTable().on("init",function(e){
+			e.option.pageSize = 20;
+			var from = 	mini.formatDate (new Date(), "yyyy-MM-dd");
+			var to = 	mini.formatDate (new Date(), "yyyy-MM-dd");
+			mdeHomePage.getSearchForm().getMiniForm().setData({
+				busi_date_from:from,
+				busi_date_to : to,
+				status:0
+			});
+		});
+        // home dtl init
+		mdeHomePage.getDtlTable().on("init",function(e){
+			console.info(e);
+			e.option.showPager=false;
+			e.option.pageSize = 1000000;
+			var allowSortColu =  e.option.columns;
+			for(var i = 0;i<allowSortColu.length;i++){
+				if(allowSortColu[i].field == "lsPrice"){
+					allowSortColu[i]["allowSort"]=false;
+				}
+				if(allowSortColu[i].type == "indexcolumn"){
+					allowSortColu[i]["width"] = "80px";
+				}
+			}
+		});
+        
+        mdeHomePage.on("onAdvQuery",function(e){
+        	e.option.height = 550;	
+        });
+        
+        
+    	function docStopCallBack(result){
+    		if(result == "ok"){
+            	getDocGrid().reload();
+    		}
+    	}
+
+     	function dtlStopCallBack(result){
+    		if(result == "ok"){
+            	getDtlGrid().reload();
+    		}
+    	}
+
+    
+		function getDtlGrid(){
+    	   return mdeHomePage.getDtlTable().getMiniTable();
+       	}
+		function getDocGrid(){
+			return mdeHomePage.getDocTable().getMiniTable();
+		}
+		function getDtlMiniTable(){
+			return mdeHomePage.getDtlTable();
+		}
+		
+        //]]>
+    </script>
+</div>
+
+<!--only form-->
+<div th:fragment="form">
+    <script th:inline="javascript">
+        //<![CDATA[
+       
+       function getDtlGrid(){
+    	   return formPage.getDtlTable().getMiniTable();
+       }
+       function getDtlMiniTable(){
+    	   return formPage.getDtlTable();
+       }
+       function getDocGrid(){
+    	   return formPage.getMiniForm();
+       }
+       
+	 
+       formPage.on("show",function(){
+    	   cur_record=null;
+       });
+       
+       
+       formPage.getDtlTable().on("init",function (e) {
+    	   e.option.pageSize = 1000000;
+    	   e.option.showPager=false;
+    	   e.option.sortOrder="asc";
+    	   e.option.sortField="id";
+    	   var allowSortColu =  e.option.columns;
+			for(var i = 0;i<allowSortColu.length;i++){
+				if(allowSortColu[i].type == "indexcolumn"){
+					allowSortColu[i]["width"] = "80px";
+				}
+			}
+       });
+	   
+       var cur_record;
+       var isLeaveFocus = false;
+       getDtlGrid().on("rowclick",function (e) {
+    	   doNewAfterSaveFlag=false;
+    	   if(!cur_record){
+    		   cur_record=e.record;
+    		   return;
+    	   }
+    	   if(e.record._uid!=cur_record._uid){
+    			if(getDataChanges()){
+    				isLeaveFocus = true;
+    				formPage.fire("onSave");
+    			}
+    	   }
+    	   cur_record=e.record;
+       });
+       
+       function getDataChanges(){
+    	   var isSave = false;
+    	   var removeRows = [];
+    	   var getChanges =   getDtlGrid().getChanges();
+    	   if(isNull(getChanges)){
+    		   return false;
+    	   }
+		   for(var i=0;i<getChanges.length;i++){
+			   if(!isNull(getChanges[i].goods_qty) && !isNull(getChanges[i].goods_id)){//只负责必填项有值才做保存
+				   isSave = true;
+			   }else{
+				   if(isNull(getChanges[i].goods_qty) && isNull(getChanges[i].goods_id)){//有一个必填项有值则不添加到移除列中
+					   removeRows.push(getChanges[i]);
+				   }
+			   }
+		   }
+		   if(isSave){
+			   for(var i=0;i<removeRows.length;i++){
+				   getDtlGrid().removeRow(getDtlGrid().getRowByUid(removeRows[i]._uid), true);
+			   }
+			   return true;
+		   }
+		   
+		   return false;
+       }
+       
+       formPage.on("loadNewData",function(e){
+    	  
+   			this.fire("doDtlNew");
+       });
+       
+       formPage.on("loadEditData",function(e){
+    	   
+       });
+      
+      
+       var isDtlNew = false;
+       formPage.on("onDtlNew",function(e){
+    	   if(getDataChanges()){
+    		    isDtlNew = true;
+    			formPage.fire("onSave"); 
+    	   }else{
+	    		formPage.fire("doDtlNew");
+    	   }
+           e.cancel=true;
+       });
+       
+       formPage.on("doDtlNew",function(e){
+    	   $(".mini-grid-virtualscroll-top").css('display','none');
+    	   $(".mini-grid-virtualscroll-bottom").css('display','none');
+    	   var dtl_grid= formPage.getDtlTable().getMiniTable();
+           var newRow = {goods_code:"",goods_qty:""};
+           dtl_grid.addRow(newRow, dtl_grid.data.length +1);
+    	   dtl_grid.updateRow(newRow,{status:0});
+    	   e.newRow=newRow;
+           e.cancel=true;
+       });
+       getDtlGrid().on("celleditenter",function(e){
+    	 var row = getDtlGrid().getRow(e.rowIndex);
+    	 if(isNull(row)){
+    		 row = getDtlGrid().getSelected();
+    	 }
+    	 if(e.column.field=='goods_qty'){
+    		 if(isNull(row.goods_qty)){
+				 setTimeout(function(){
+					 getDtlGrid().beginEditCell(row,"goods_qty");
+		           },0);
+    		 }else if(isNull(row.goods_code)){
+    			 setTimeout(function(){
+					 getDtlGrid().beginEditCell(row,"goods_code");
+		           },0);
+    		 }
+		 }
+       });
+       
+       getDtlGrid().on("cellendedit",function(e){
+    	 var row = getDtlGrid().getRow(e.rowIndex);
+    	 if(isNull(row)){
+    		 row = getDtlGrid().getSelected();
+    	 }
+       });
+     	
+       
+       formPage.on("onSave",function(e){
+
+       });
+       
+       function getNewRow(e){
+    	   var event = new MiniEvent(e._event);
+   		   formPage.fire("lastEnterDtlNew",event);
+		   setTimeout(function(){getDtlGrid().beginEditCell(event.newRow,"goods_code");
+		   getDtlGrid().clearSelect();
+		   getDtlGrid().select (event.newRow);
+		   },0);
+       }
+       formPage.on("lastEnterDtlNew",function(e){
+    	   var dtl_grid= formPage.getDtlTable().getMiniTable();
+           var newRow = {goods_code:"",goods_qty:""};
+           dtl_grid.addRow(newRow, dtl_grid.data.length +1);
+    	   dtl_grid.updateRow(newRow,{status:0});
+    	   e.newRow=newRow;
+           e.cancel=true;
+       });
+       
+       function getAllSetFalse(){
+    	   $(".mini-grid-virtualscroll-top").css('display','none');
+    	   $(".mini-grid-virtualscroll-bottom").css('display','none');
+    	   doNewAfterSaveFlag=false;
+  		   isLeaveFocus = false;
+  		   isDtlNew = false;
+       }
+       var doNewAfterSaveFlag=false;
+       formPage.getDtlTable().getMiniTable().on("load",function(e){
+	   	   if(doNewAfterSaveFlag){
+	   			getAllSetFalse();
+	   			getNewRow(e);
+	   	   }else if(isLeaveFocus){
+	   		 getAllSetFalse();
+	   		 getNewRow(e);
+	   	   }else if(isDtlNew){
+	   		getAllSetFalse();
+	   		getNewRow(e);
+	   	   }
+	   	   
+       });
+       formPage.getDtlTable().on("lastEnter",function(e){
+    	   doNewAfterSaveFlag=true;
+    	   if(getDataChanges()){
+	    	   formPage.fire("onSave");//触发保存
+    	   }
+       });
+       
+       formPage.on("hovCallback",function (e) {
+    	   var data = e.data;
+    	  
+       });
+     	
+       formPage.getDtlTable().on("hovCallback",function (e) {
+    	   var data = e.data;
+    	   var row = getDtlGrid().getSelected();
+    	  
+       });
+
+       formPage.getDtlTable().on("autoCompleteLoad",function (e) {
+    	   if(e._event.data.length==1){
+    		   var data = e._event.data;
+    		   var row = getDtlGrid().getSelected();
+    		   setGoods(e,row,data[0]);
+    		   e._event.sender.hidePopup();
+    		   e.cancel = true;
+    		}
+       });
+
+
+
+        //]]>
+    </script>
+</div>

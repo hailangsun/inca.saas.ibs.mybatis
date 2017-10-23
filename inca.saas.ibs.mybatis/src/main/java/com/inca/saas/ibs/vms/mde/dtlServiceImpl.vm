@@ -1,22 +1,23 @@
-package ${model.dtlPkgName};
+package ${model.basePkgName};
 
 import com.inca.saas.miniui.MiniDtlServiceImpl;
 import com.inca.saas.miniui.MiniuiQuery;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-/**
- * @date: ($model.timestamp)
- * @author: <$model.author>
- */
-@Service(${model.dtlEntityClassName}DtlService.SERVICE_NAME)
+@Service(${model.controllerName}DtlService.SERVICE_NAME)
 @Transactional
-public class ${model.dtlEntityClassName}DtlServiceImpl extends MiniDtlServiceImpl implements ${model.dtlEntityClassName}DtlService {
+public class ${model.controllerName}DtlServiceImpl extends MiniDtlServiceImpl implements ${model.controllerName}DtlService {
 	final Log log = LogFactory.getLog(getClass());
 	
 	@Override
     public String getBaseSQL(MiniuiQuery query) {
         query.setLoggerPrefix(${model.dtlPrefix});
         StringBuffer whereSQL = getWhereSQL(query);
-        String sql = ${model.dtlBaseSql}+whereSQL.toString();
+        String sql = "${model.dtlBaseSql}"+whereSQL.toString();
 		
         String wheres = getWheres(query);
         if(!StringUtils.isEmpty(wheres)){

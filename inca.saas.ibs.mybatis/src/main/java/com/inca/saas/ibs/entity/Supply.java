@@ -4,8 +4,9 @@ import javax.persistence.Column;
 
 import com.inca.saas.ibs.common.Option;
 import com.inca.saas.ibs.common.Title;
+import com.inca.saas.ibs.demo.Parent;
 
-public class Supply {
+public class Supply extends Parent{
 
 	@Title("编号")
 	@Column(name = "supply_code", length = 50, nullable = false, unique = true)

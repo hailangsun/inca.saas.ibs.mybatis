@@ -1,12 +1,8 @@
-package ${model.docPkgName};
+package ${model.basePkgName};
 
 
-/**
- * @date: ($model.timestamp)
- * @author: <$model.author>
- */
-public interface ${model.docEntityClassName}DocService {
+public interface ${model.controllerName}DocService {
 
-	static final String SERVICE_NAME = "${model.docSubsysName}${model.docEntityClassName}DocService";
+	static final String SERVICE_NAME = "${model.docSubsysName}${model.controllerName}DocService";
 	
 }
