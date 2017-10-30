@@ -104,15 +104,15 @@ public class CodegenController {
 		model.addAttribute("formStatus",formStatus);
 		return "ibs/codegen/form";
 	}
-	/**
-	 * 表格设计子页面
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping({"/table"})
-	public String table(Model model){
-		return "ibs/codegen/table";
-	}
+//	/**
+//	 * 表格设计子页面
+//	 * @param model
+//	 * @return
+//	 */
+//	@RequestMapping({"/table"})
+//	public String table(Model model){
+//		return "ibs/codegen/table";
+//	}
 	
 	//数据库类型
 	private String getClassType(String type){
@@ -427,47 +427,44 @@ public class CodegenController {
 			xmldir.mkdirs();
 		}
 		
-		if(!"null".equals(currentData) && currentData != null){
-			type = "0";
-			createXml(type,currentData,getData,dir,xmldir);
-		}
-		
-		if(!"null".equals(docData) && docData != null){
-			type = "1";
-			createXml(type,docData,getData,dir,xmldir);
-			
-			CodegenModel codegenModel = new CodegenModel();
-			codegenModel.setSavePath(dir);//保存路径
-			codegenModel.setControllerName(title);
-			codegenModel.setBasePkgName(entity);
-			codegenModel.setDocBaseSql(docBaseSql);
-			codegenModel.setDtlBaseSql(dtlBaseSql);
-			codegenModel.setDocSubsysName(docSubsysName);
-			codegenModel.setDtlSubsysName(dtlSubsysName);
-			try {
-				getCreateJava(codegenModel,type);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		if(!"null".equals(dtlData) && dtlData != null){
-			type ="2";
-			createXml(type,dtlData,getData,dir,xmldir);
-		}
-		
-		//生成controll
-		String controllHtml = "";
-		if(type.equals("1") || type.equals("2")){
-			 controllHtml = "mde/controll.vm";
-		}else{
-			controllHtml = "ste/controll.vm";
-		}
-		CodegenModel codegenModel = new CodegenModel();
-		codegenModel.setSavePath(xmldir);//保存路径
+		CodegenModel docAndDtlCodegenModel = new CodegenModel();
+		docAndDtlCodegenModel.setSavePath(dir);//保存路径
+		docAndDtlCodegenModel.setControllerName(title);
+		docAndDtlCodegenModel.setBasePkgName(entity);
+		docAndDtlCodegenModel.setDocBaseSql(docBaseSql);
+		docAndDtlCodegenModel.setDtlBaseSql(dtlBaseSql);
+		docAndDtlCodegenModel.setDocSubsysName(docSubsysName);
+		docAndDtlCodegenModel.setDtlSubsysName(dtlSubsysName);
 		try {
+			if(!"null".equals(currentData) && currentData != null){
+				type = "0";
+				createXml(type,currentData,getData,dir,xmldir);
+				getCreateJava(docAndDtlCodegenModel,type);
+			}
+			
+			if(!"null".equals(docData) && docData != null){
+				type = "1";
+				createXml(type,docData,getData,dir,xmldir);
+				getCreateJava(docAndDtlCodegenModel,type);
+			}
+			
+			
+			if(!"null".equals(dtlData) && dtlData != null){
+				type ="2";
+				createXml(type,dtlData,getData,dir,xmldir);
+			}
+			
+			//生成controll
+			String controllHtml = "";
+			if(type.equals("1") || type.equals("2")){
+				 controllHtml = "mde/controll.vm";
+			}else{
+				controllHtml = "ste/controll.vm";
+			}
+			CodegenModel codegenModel = new CodegenModel();
+			codegenModel.setSavePath(xmldir);//保存路径
 			getCreateControll(codegenModel,controllHtml);
+		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

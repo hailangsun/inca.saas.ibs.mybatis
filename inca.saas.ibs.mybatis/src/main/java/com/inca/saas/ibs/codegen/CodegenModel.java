@@ -3,7 +3,6 @@ package com.inca.saas.ibs.codegen;
 import java.io.File;
 
 public class CodegenModel {
-	//基础包名
 	
 	//保存路径
 	private File savePath;
@@ -18,33 +17,10 @@ public class CodegenModel {
 	private String dtlSubsysName;
 	private String subsysName;
 	
-	private String entityClassName;
-	private String dtlEntityClassName;
-	private String docEntityClassName;
 	private String docPrefix;
 	private String dtlPrefix;
 	private String prefix;
 	
-	
-
-	public String getEntityClassName() {
-		return entityClassName;
-	}
-	public void setEntityClassName(String entityClassName) {
-		this.entityClassName = entityClassName;
-	}
-	public String getDtlEntityClassName() {
-		return dtlEntityClassName;
-	}
-	public void setDtlEntityClassName(String dtlEntityClassName) {
-		this.dtlEntityClassName = dtlEntityClassName;
-	}
-	public String getDocEntityClassName() {
-		return docEntityClassName;
-	}
-	public void setDocEntityClassName(String docEntityClassName) {
-		this.docEntityClassName = docEntityClassName;
-	}
 	public String getDocPrefix() {
 		return docPrefix;
 	}
